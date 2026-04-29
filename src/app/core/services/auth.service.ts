@@ -1,0 +1,65 @@
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
+import { UserResponseDto, UserLoginDto, AuthResponseDto } from '../models';
+import { JwtPayload } from '../models';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly base = `${environment.apiBaseUrl}/users`;
+
+  private readonly currentUserSignal = signal<UserResponseDto | null>(null);
+  readonly currentUser = this.currentUserSignal.asReadonly();
+  readonly isLoggedIn = computed(() => !!this.currentUser());
+  readonly isVerified = computed(() => this.currentUser()?.verified ?? false);
+  readonly role = computed(() => this.currentUser()?.role ?? null);
+
+  initFromStorage(): void {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      const payload = jwtDecode<JwtPayload>(token);
+      if (payload.exp * 1000 < Date.now()) {
+        this.clearSession();
+        return;
+      }
+      this.http.get<UserResponseDto>(`${this.base}/id/${payload.sub}`).subscribe({
+        next: user => this.currentUserSignal.set(user),
+        error: () => this.clearSession()
+      });
+    } catch {
+      this.clearSession();
+    }
+  }
+
+  login(dto: UserLoginDto): Observable<AuthResponseDto> {
+    return this.http.post<AuthResponseDto>(`${this.base}/login`, dto).pipe(
+      tap(res => {
+        localStorage.setItem('token', res.token);
+        this.currentUserSignal.set(res.user);
+      })
+    );
+  }
+
+  logout(): void {
+    this.clearSession();
+    this.router.navigate(['/login']);
+  }
+
+  refreshUser(id: number): void {
+    this.http.get<UserResponseDto>(`${this.base}/id/${id}`).subscribe(
+      user => this.currentUserSignal.set(user)
+    );
+  }
+
+  private clearSession(): void {
+    localStorage.removeItem('token');
+    this.currentUserSignal.set(null);
+  }
+}
+
