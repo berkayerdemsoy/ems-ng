@@ -19,21 +19,24 @@ export class AuthService {
   readonly isVerified = computed(() => this.currentUser()?.verified ?? false);
   readonly role = computed(() => this.currentUser()?.role ?? null);
 
-  initFromStorage(): void {
+  initFromStorage(): Promise<void> {
     const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!token) return Promise.resolve();
     try {
       const payload = jwtDecode<JwtPayload>(token);
       if (payload.exp * 1000 < Date.now()) {
         this.clearSession();
-        return;
+        return Promise.resolve();
       }
-      this.http.get<UserResponseDto>(`${this.base}/id/${payload.sub}`).subscribe({
-        next: user => this.currentUserSignal.set(user),
-        error: () => this.clearSession()
+      return new Promise<void>(resolve => {
+        this.http.get<UserResponseDto>(`${this.base}/id/${payload.sub}`).subscribe({
+          next: user => { this.currentUserSignal.set(user); resolve(); },
+          error: () => { this.clearSession(); resolve(); }
+        });
       });
     } catch {
       this.clearSession();
+      return Promise.resolve();
     }
   }
 

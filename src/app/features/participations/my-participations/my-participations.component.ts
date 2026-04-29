@@ -2,7 +2,8 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter, take, switchMap } from 'rxjs/operators';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { EventService } from '../../../core/services/event.service';
 import { ParticipationService } from '../../../core/services/participation.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -86,27 +87,34 @@ export class MyParticipationsComponent implements OnInit {
   readonly isLoading = signal(true);
 
   ngOnInit(): void {
-    const userEmail = this.authService.currentUser()?.email;
-    if (!userEmail) { this.isLoading.set(false); return; }
-
-    // Fetch all events, then find participations matching user's email
-    this.eventService.getAll(0, 100).subscribe({
-      next: page => {
-        if (page.empty) { this.isLoading.set(false); return; }
-        const requests = page.content.map(e =>
-          this.participationService.getByEvent(e.id).pipe(catchError(() => of([])))
-        );
-        forkJoin(requests).subscribe({
-          next: results => {
-            const myParticipations = results
+    // Wait until currentUser is populated (APP_INITIALIZER may still be resolving)
+    toObservable(this.authService.currentUser).pipe(
+      filter(user => !!user),
+      take(1),
+      switchMap(user => {
+        const userEmail = user!.email;
+        return this.eventService.getAll(0, 100).pipe(
+          switchMap(page => {
+            if (page.empty) return of([]);
+            const requests = page.content.map(e =>
+              this.participationService.getByEvent(e.id).pipe(catchError(() => of([])))
+            );
+            return forkJoin(requests).pipe(
+              catchError(() => of([]))
+            );
+          }),
+          catchError(() => of([])),
+        ).pipe(
+          switchMap(results => {
+            const myParticipations = (results as ParticipationResponseDto[][])
               .flat()
               .filter((p: ParticipationResponseDto) => p.participantEmail === userEmail);
-            this.participations.set(myParticipations);
-            this.isLoading.set(false);
-          },
-          error: () => this.isLoading.set(false)
-        });
-      },
+            return of(myParticipations);
+          })
+        );
+      })
+    ).subscribe({
+      next: list => { this.participations.set(list); this.isLoading.set(false); },
       error: () => this.isLoading.set(false)
     });
   }
