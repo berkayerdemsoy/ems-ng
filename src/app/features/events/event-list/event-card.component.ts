@@ -4,11 +4,12 @@ import { DatePipe, CurrencyPipe } from '@angular/common';
 import { EventResponseDto } from '../../../core/models';
 import { EventStatusPipe } from '../../../shared/pipes/event-status.pipe';
 import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [RouterLink, DatePipe, CurrencyPipe, EventStatusPipe, AvailableSeatsPipe],
+  imports: [RouterLink, DatePipe, CurrencyPipe, EventStatusPipe, AvailableSeatsPipe, TranslatePipe],
   template: `
     @if (featured()) {
       <!-- Featured / Large card -->
@@ -43,8 +44,8 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
               <span class="material-symbols-outlined" style="font-size:18px">payments</span>
               {{ event().price === 0 ? 'Free' : (event().price | currency:'TRY':'symbol-narrow':'1.0-0') }}
             </div>
-            <button class="ml-auto glass-card border border-white/50 px-6 py-2 rounded-full text-[11px] font-semibold tracking-widest uppercase text-on-surface hover:bg-white/50 transition-colors">
-              Details <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">chevron_right</span>
+            <button class="ml-auto glass-card border border-white/50 px-6 py-2 rounded-full text-[11px] font-semibold tracking-widest uppercase text-on-surface hover:bg-white/50 transition-colors select-none">
+              {{ 'eventCard.viewDetails' | t }} <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">chevron_right</span>
             </button>
           </div>
         </div>

@@ -5,13 +5,15 @@ import { EventService } from '../../../core/services/event.service';
 import { ParticipationService } from '../../../core/services/participation.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ErrorToastService } from '../../../shared/components/error-toast/error-toast.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { EventResponseDto, ErrorResponseDto } from '../../../core/models';
 import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [RouterLink, DatePipe, CurrencyPipe, DecimalPipe, AvailableSeatsPipe],
+  imports: [RouterLink, DatePipe, CurrencyPipe, DecimalPipe, AvailableSeatsPipe, TranslatePipe],
   template: `
     <div class="min-h-screen flex flex-col pt-20">
 
@@ -45,11 +47,11 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
               <div class="flex gap-3 mt-2">
                 <a [routerLink]="['/events', e.id, 'edit']"
                    class="px-6 py-2 rounded-full glass-panel text-on-surface text-xs font-semibold tracking-widest uppercase hover:bg-surface-container transition-colors">
-                  <span class="material-symbols-outlined" style="font-size:16px">edit</span> Edit
+                  <span class="material-symbols-outlined" style="font-size:16px">edit</span> {{ 'eventDetail.editBtn' | t }}
                 </a>
                 <button (click)="deleteEvent()"
                         class="px-6 py-2 rounded-full bg-error-container text-on-error-container text-xs font-semibold tracking-widest uppercase hover:bg-error hover:text-on-error transition-colors">
-                  <span class="material-symbols-outlined" style="font-size:16px">delete</span> Delete
+                  <span class="material-symbols-outlined" style="font-size:16px">delete</span> {{ 'eventDetail.deleteBtn' | t }}
                 </button>
               </div>
             }
@@ -65,21 +67,21 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
               <!-- About Card -->
               <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_20px_40px_rgba(28,28,23,0.03)] relative overflow-hidden group">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary-container/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <h2 class="text-3xl font-medium text-on-surface mb-4">About the Event</h2>
+                <h2 class="text-3xl font-medium text-on-surface mb-4">{{ 'eventDetail.about' | t }}</h2>
                 <p class="text-lg text-on-surface-variant leading-[1.6] mb-8 whitespace-pre-wrap">{{ e.description }}</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-outline-variant/20">
                   <div>
-                    <p class="text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-1">Start Date</p>
+                    <p class="text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-1">{{ 'eventDetail.startDate' | t }}</p>
                     <p class="text-base text-on-surface">{{ e.startDate | date:'dd MMM yyyy' }}</p>
                     <p class="text-sm text-on-surface-variant">{{ e.startDate | date:'HH:mm' }}</p>
                   </div>
                   <div>
-                    <p class="text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-1">End Date</p>
+                    <p class="text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-1">{{ 'eventDetail.endDate' | t }}</p>
                     <p class="text-base text-on-surface">{{ e.endDate | date:'dd MMM yyyy' }}</p>
                     <p class="text-sm text-on-surface-variant">{{ e.endDate | date:'HH:mm' }}</p>
                   </div>
                   <div class="sm:col-span-2">
-                    <p class="text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-1">Venue</p>
+                    <p class="text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-1">{{ 'eventDetail.venue' | t }}</p>
                     <p class="text-base text-on-surface">{{ e.city }}</p>
                     <p class="text-sm text-on-surface-variant">{{ e.address }}</p>
                   </div>
@@ -88,14 +90,14 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
 
               <!-- Organized By -->
               <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_20px_40px_rgba(28,28,23,0.03)]">
-                <h3 class="text-3xl font-medium text-on-surface mb-8">Organized By</h3>
+              <h3 class="text-3xl font-medium text-on-surface mb-8">{{ 'eventDetail.organizer' | t }}</h3>
                 <div class="flex items-center gap-8">
                   <div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center text-2xl font-light text-on-surface-variant border border-outline-variant/30 shrink-0">
                     <span class="material-symbols-outlined">person</span>
                   </div>
                   <div>
                     <p class="text-lg font-medium text-on-surface">{{ e.ownerEmail }}</p>
-                    <p class="text-base text-on-surface-variant">Event Organizer</p>
+                    <p class="text-base text-on-surface-variant">{{ 'eventDetail.organizerRole' | t }}</p>
                   </div>
                 </div>
               </div>
@@ -105,29 +107,34 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
             <div class="lg:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
               <!-- Registration Card -->
               <div class="bg-surface-container-lowest/90 backdrop-blur-2xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)]">
-                <h3 class="text-3xl font-medium text-on-surface mb-1">Registration</h3>
-                <p class="text-base text-on-surface-variant mb-8">Secure your spot at this experience.</p>
+                <h3 class="text-3xl font-medium text-on-surface mb-1">{{ 'eventDetail.registration' | t }}</h3>
+                <p class="text-base text-on-surface-variant mb-8">{{ 'eventDetail.registrationSub' | t }}</p>
                 <div class="flex justify-between items-end mb-[4rem]">
                   <span class="text-[48px] leading-[1.2] tracking-[-0.02em] font-light text-on-surface">
                     {{ e.price === 0 ? 'Free' : (e.price | currency:'TRY':'symbol-narrow':'1.0-0') }}
                   </span>
                   @if (e.price > 0) {
-                    <span class="text-base text-on-surface-variant pb-2">/ person</span>
+                    <span class="text-base text-on-surface-variant pb-2">{{ 'eventDetail.perPerson' | t }}</span>
                   }
                 </div>
 
                 @if (alreadyJoined()) {
                   <div class="w-full py-4 rounded-lg bg-secondary-fixed/20 border border-secondary-container/30 flex items-center justify-center gap-2 text-secondary text-xs font-semibold tracking-widest uppercase">
                     <span class="material-symbols-outlined" style="font-size:18px">check_circle</span>
-                    You're Registered
+                    {{ 'eventDetail.registered' | t }}
+                  </div>
+                } @else if (isEventHost()) {
+                  <div class="w-full py-4 rounded-lg bg-surface-container border border-outline-variant/30 flex items-center justify-center gap-2 text-on-surface-variant text-xs font-semibold tracking-widest uppercase">
+                    <span class="material-symbols-outlined" style="font-size:18px">star</span>
+                    {{ 'eventDetail.isHost' | t }}
                   </div>
                 } @else if ((e | availableSeats) <= 0) {
                   <div class="w-full py-4 rounded-lg bg-surface-container text-on-surface-variant text-xs font-semibold tracking-widest uppercase text-center">
-                    Sold Out
+                    {{ 'common.soldOut' | t }}
                   </div>
                 } @else if (e.status === 'CANCELLED' || e.status === 'COMPLETED') {
                   <div class="w-full py-4 rounded-lg bg-surface-container text-on-surface-variant text-xs font-semibold tracking-widest uppercase text-center">
-                    Registration Closed
+                    {{ 'eventDetail.closed' | t }}
                   </div>
                 } @else {
                   <button (click)="joinEvent()" [disabled]="isJoining()"
@@ -135,7 +142,7 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
                     @if (isJoining()) {
                       <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                     } @else {
-                      <span>Register Now</span>
+                      <span>{{ 'eventDetail.registerNow' | t }}</span>
                       <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
                     }
                   </button>
@@ -145,7 +152,7 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
               <!-- Capacity Card -->
               <div class="bg-surface-container/50 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/20">
                 <div class="flex items-center justify-between mb-4">
-                  <h4 class="text-lg font-medium text-on-surface">Capacity Status</h4>
+                  <h4 class="text-lg font-medium text-on-surface">{{ 'eventDetail.capacityStatus' | t }}</h4>
                   <span class="material-symbols-outlined text-secondary-container">group</span>
                 </div>
                 @let pct = (e.currentAttendees / e.capacity) * 100;
@@ -165,7 +172,7 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
         <div class="max-w-7xl mx-auto px-[max(40px,5vw)] pb-12">
           <a routerLink="/events" class="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-secondary transition-colors">
             <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
-            Back to Discover
+            {{ 'eventDetail.backToEvents' | t }}
           </a>
         </div>
       }
@@ -178,6 +185,7 @@ export class EventDetailComponent implements OnInit {
   private readonly participationService = inject(ParticipationService);
   private readonly authService = inject(AuthService);
   private readonly toast = inject(ErrorToastService);
+  private readonly i18n = inject(I18nService);
   readonly router = inject(Router);
 
   readonly event = signal<EventResponseDto | null>(null);
@@ -190,6 +198,12 @@ export class EventDetailComponent implements OnInit {
     const e = this.event();
     if (!user || !e) return false;
     return e.ownerId === user.id || user.role === 'ADMIN';
+  });
+
+  readonly isEventHost = computed(() => {
+    const user = this.authService.currentUser();
+    const e = this.event();
+    return !!user && !!e && e.ownerId === user.id;
   });
 
   ngOnInit(): void {
@@ -206,8 +220,13 @@ export class EventDetailComponent implements OnInit {
   }
 
   statusLabel(s: string): string {
-    const m: Record<string, string> = { UPCOMING: 'Upcoming', ONGOING: 'Live Now', COMPLETED: 'Completed', CANCELLED: 'Cancelled' };
-    return m[s] ?? s;
+    const map: Record<string, string> = {
+      UPCOMING:  this.i18n.t('status.upcoming'),
+      ONGOING:   this.i18n.t('status.ongoing'),
+      COMPLETED: this.i18n.t('status.completed'),
+      CANCELLED: this.i18n.t('status.cancelled'),
+    };
+    return map[s] ?? s;
   }
 
   statusBadge(s: string): string {
@@ -227,21 +246,23 @@ export class EventDetailComponent implements OnInit {
     this.participationService.register({ eventId: e.id, participantEmail: user.email }).subscribe({
       next: () => {
         this.isJoining.set(false); this.alreadyJoined.set(true);
-        this.toast.show('Successfully registered for this event!', 'success');
+        this.toast.show(this.i18n.t('eventDetail.registerSuccess'), 'success');
         this.loadEvent(e.id);
       },
       error: (err: ErrorResponseDto) => {
         this.isJoining.set(false);
-        if (err?.errorCode === 'ALREADY_EXISTS') { this.alreadyJoined.set(true); this.toast.show('You are already registered.', 'info'); }
+        if (err?.errorCode === 'ALREADY_EXISTS') { this.alreadyJoined.set(true); this.toast.show(this.i18n.t('eventDetail.alreadyRegistered'), 'info'); }
       }
     });
   }
 
   deleteEvent(): void {
     const e = this.event(); if (!e) return;
-    if (!confirm(`Delete "${e.title}"?`)) return;
-    this.eventService.delete(e.id).subscribe({
-      next: () => { this.toast.show('Event deleted.', 'success'); this.router.navigate(['/events']); }
+    this.toast.confirm(`"${e.title}" ${this.i18n.t('eventDetail.deleteConfirm')}`).then(ok => {
+      if (!ok) return;
+      this.eventService.delete(e.id).subscribe({
+        next: () => { this.toast.show(this.i18n.t('eventDetail.deleteSuccess'), 'success'); this.router.navigate(['/events']); }
+      });
     });
   }
 }

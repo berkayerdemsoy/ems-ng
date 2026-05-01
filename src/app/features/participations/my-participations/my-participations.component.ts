@@ -8,20 +8,21 @@ import { EventService } from '../../../core/services/event.service';
 import { ParticipationService } from '../../../core/services/participation.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ParticipationResponseDto } from '../../../core/models';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-my-participations',
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, TranslatePipe],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 right-1/4 w-96 h-96 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
       <div class="max-w-4xl mx-auto">
         <div class="mb-12">
-          <span class="text-[11px] font-semibold tracking-[0.15em] uppercase text-on-surface-variant px-4 py-1 rounded-full glass-panel inline-block mb-4">Tickets</span>
-          <h1 class="text-[48px] leading-[1.2] tracking-[-0.02em] font-light text-on-surface">My Participations</h1>
-          <p class="text-base text-on-surface-variant mt-2">All the experiences you've registered for.</p>
+          <span class="text-[11px] font-semibold tracking-[0.15em] uppercase text-on-surface-variant px-4 py-1 rounded-full glass-panel inline-block mb-4">{{ 'participations.badge' | t }}</span>
+          <h1 class="text-[48px] leading-[1.2] tracking-[-0.02em] font-light text-on-surface">{{ 'participations.title' | t }}</h1>
+          <p class="text-base text-on-surface-variant mt-2">{{ 'participations.subtitle' | t }}</p>
         </div>
 
         @if (isLoading()) {
@@ -33,9 +34,9 @@ import { ParticipationResponseDto } from '../../../core/models';
         } @else if (participations().length === 0) {
           <div class="text-center py-24 glass-card rounded-xl border border-outline-variant/20">
             <p class="text-6xl mb-6">✦</p>
-            <p class="text-2xl font-light text-on-surface">No tickets yet</p>
+            <p class="text-2xl font-light text-on-surface">{{ 'participations.emptyTitle' | t }}</p>
             <p class="text-base text-on-surface-variant mt-2">
-              <a routerLink="/events" class="text-secondary hover:underline">Explore experiences</a>
+              <a routerLink="/events" class="text-secondary hover:underline">{{ 'participations.exploreLink' | t }}</a>
             </p>
           </div>
         } @else {
@@ -54,13 +55,13 @@ import { ParticipationResponseDto } from '../../../core/models';
                       </a>
                       <div class="flex items-center gap-2 text-sm text-on-surface-variant">
                         <span class="material-symbols-outlined" style="font-size:14px">calendar_today</span>
-                        <span>Registered {{ p.registeredAt | date:'dd MMM yyyy' }}</span>
+                        <span>{{ 'participations.registeredAt' | t }} {{ p.registeredAt | date:'dd MMM yyyy' }}</span>
                       </div>
                     </div>
                   </div>
                   <a [routerLink]="['/events', p.eventId]"
                      class="flex-shrink-0 glass-panel border border-outline-variant/30 px-5 py-2 rounded-full text-[11px] font-semibold tracking-widest text-on-surface uppercase hover:bg-white/50 transition-colors flex items-center gap-2">
-                    View
+                    {{ 'participations.view' | t }}
                     <span class="material-symbols-outlined" style="font-size:14px">chevron_right</span>
                   </a>
                 </div>

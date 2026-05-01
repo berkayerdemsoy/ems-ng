@@ -7,11 +7,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { EventResponseDto, Page, CategoryDto } from '../../../core/models';
 import { EventCardComponent } from './event-card.component';
 import { toBackendDateTime } from '../../../core/utils/date.utils';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [FormsModule, RouterLink, EventCardComponent],
+  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe],
   template: `
     <div class="pt-20 pb-24 relative">
       <!-- Ambient orbs -->
@@ -25,18 +26,18 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
           <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
             <div>
               <h1 class="text-[84px] leading-[1.1] tracking-[-0.04em] font-light text-on-surface">
-                Ethereal<br/><span class="italic text-secondary-fixed-dim">Experiences</span>
+                {{ 'eventList.title1' | t }}<br/><span class="italic text-secondary-fixed-dim">{{ 'eventList.title2' | t }}</span>
               </h1>
             </div>
             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
               <a routerLink="/events/create"
                  class="mt-8 px-8 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors self-end">
-                + New Experience
+                {{ 'eventList.newExperience' | t }}
               </a>
             }
           </div>
           <p class="text-lg text-on-surface-variant max-w-2xl mb-10">
-            Immerse yourself in a curated collection of transcendent events, where art, technology, and connection converge.
+            {{ 'eventList.subtitle' | t }}
           </p>
 
           <!-- Glass Filter Bar -->
@@ -45,13 +46,13 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
               <span class="material-symbols-outlined text-outline mr-3" style="font-size:20px">location_on</span>
               <input [(ngModel)]="cityInput" (ngModelChange)="onCityChange($event)"
                      class="bg-transparent border-none outline-none focus:ring-0 text-base text-on-surface placeholder-on-surface-variant/50 w-full"
-                     placeholder="City or Region" type="text"/>
+                     [placeholder]="'eventList.cityPlaceholder' | t" type="text"/>
             </div>
             <div class="flex-1 flex items-center px-4 w-full md:w-auto border-b md:border-b-0 md:border-r border-outline-variant/30 py-2 md:py-0">
               <span class="material-symbols-outlined text-outline mr-3" style="font-size:20px">category</span>
               <select [(ngModel)]="selectedCategoryId" (ngModelChange)="onCategoryChange($event)"
                       class="bg-transparent border-none outline-none focus:ring-0 text-base text-on-surface w-full appearance-none">
-                <option [ngValue]="null">All Categories</option>
+                <option [ngValue]="null">{{ 'eventList.allCategories' | t }}</option>
                 @for (cat of categories(); track cat.id) {
                   <option [ngValue]="cat.id">{{ cat.name }}</option>
                 }
@@ -65,7 +66,7 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
             </div>
             <button (click)="clearFilters()"
                     class="bg-secondary-container text-on-secondary-container w-full md:w-auto px-8 py-3 rounded-full text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors ml-auto md:ml-2">
-              @if (hasFilter()) { Clear } @else { Discover }
+              @if (hasFilter()) { {{ 'eventList.clearFilter' | t }} } @else { {{ 'eventList.discover' | t }} }
             </button>
           </div>
         </header>
@@ -82,8 +83,8 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
         } @else if (eventsPage()?.empty) {
           <div class="text-center py-24">
             <p class="text-6xl mb-6">✦</p>
-            <p class="text-2xl font-light text-on-surface-variant">No experiences found</p>
-            <p class="text-base text-on-surface-variant/60 mt-2">Try different filters or explore all events.</p>
+            <p class="text-2xl font-light text-on-surface-variant">{{ 'eventList.emptyTitle' | t }}</p>
+            <p class="text-base text-on-surface-variant/60 mt-2">{{ 'eventList.emptySubtitle' | t }}</p>
           </div>
         } @else {
             <!-- Bento Grid -->
@@ -103,7 +104,7 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
               <button (click)="onPageChange(currentPage() + 1)"
                       class="glass-card border border-amber-500/30 px-8 py-3 rounded-full text-xs font-semibold tracking-widest text-secondary-container uppercase hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
                 <span class="material-symbols-outlined" style="font-size:18px">expand_more</span>
-                Load More Experiences
+                {{ 'eventList.loadMore' | t }}
               </button>
             </div>
           }
@@ -112,7 +113,7 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
         <!-- Results count -->
         @if (eventsPage() && !isLoading()) {
           <p class="text-sm text-on-surface-variant/60 mt-6 text-center">
-            {{ eventsPage()!.totalElements }} experience{{ eventsPage()!.totalElements !== 1 ? 's' : '' }} found
+            {{ eventsPage()!.totalElements }} {{ 'eventList.totalFound' | t }}
           </p>
         }
       </div>

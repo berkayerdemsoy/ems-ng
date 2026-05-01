@@ -3,21 +3,23 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { ErrorToastService } from '../../../shared/components/error-toast/error-toast.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { ErrorResponseDto } from '../../../core/models';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   template: `
     <div class="min-h-screen flex items-center justify-center px-4 py-12 pt-28 relative">
       <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
       <div class="w-full max-w-lg">
         <div class="text-center mb-10">
-          <span class="text-[11px] font-semibold tracking-[0.15em] uppercase text-on-surface-variant px-4 py-1 rounded-full glass-panel inline-block mb-4">Join Us</span>
-          <h1 class="text-[48px] leading-[1.2] tracking-[-0.02em] font-light text-on-surface">Create Account</h1>
-          <p class="text-base text-on-surface-variant mt-2">Begin your Aura Events journey.</p>
+          <span class="text-[11px] font-semibold tracking-[0.15em] uppercase text-on-surface-variant px-4 py-1 rounded-full glass-panel inline-block mb-4">{{ 'register.badge' | t }}</span>
+          <h1 class="text-[48px] leading-[1.2] tracking-[-0.02em] font-light text-on-surface">{{ 'register.title' | t }}</h1>
+          <p class="text-base text-on-surface-variant mt-2">{{ 'register.subtitle' | t }}</p>
         </div>
 
         <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)]">
@@ -25,53 +27,53 @@ import { ErrorResponseDto } from '../../../core/models';
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">First Name</label>
+                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.firstNameLabel' | t }}</label>
                 <input formControlName="firstName" type="text"
                   class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
                   [class.border-error]="isInvalid('firstName')" [class.border-outline-variant]="!isInvalid('firstName')"
                   placeholder="Ada" />
-                @if (isInvalid('firstName')) { <p class="mt-1 text-xs text-error">Required.</p> }
+                @if (isInvalid('firstName')) { <p class="mt-1 text-xs text-error">{{ 'register.required' | t }}</p> }
               </div>
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">Last Name</label>
+                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.lastNameLabel' | t }}</label>
                 <input formControlName="lastName" type="text"
                   class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
                   [class.border-error]="isInvalid('lastName')" [class.border-outline-variant]="!isInvalid('lastName')"
                   placeholder="Lovelace" />
-                @if (isInvalid('lastName')) { <p class="mt-1 text-xs text-error">Required.</p> }
+                @if (isInvalid('lastName')) { <p class="mt-1 text-xs text-error">{{ 'register.required' | t }}</p> }
               </div>
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">Username</label>
+              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.usernameLabel' | t }}</label>
               <input formControlName="username" type="text"
                 class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
                 [class.border-error]="isInvalid('username')" [class.border-outline-variant]="!isInvalid('username')"
                 placeholder="your_username" />
-              @if (isInvalid('username')) { <p class="mt-1 text-xs text-error">Username is required.</p> }
+              @if (isInvalid('username')) { <p class="mt-1 text-xs text-error">{{ 'register.usernameRequired' | t }}</p> }
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">Email</label>
+              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.emailLabel' | t }}</label>
               <input formControlName="email" type="email"
                 class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
                 [class.border-error]="isInvalid('email')" [class.border-outline-variant]="!isInvalid('email')"
                 placeholder="you@example.com" />
-              @if (isInvalid('email')) { <p class="mt-1 text-xs text-error">Enter a valid email.</p> }
+              @if (isInvalid('email')) { <p class="mt-1 text-xs text-error">{{ 'register.emailRequired' | t }}</p> }
             </div>
 
             <div>
-              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">Password</label>
+              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.passwordLabel' | t }}</label>
               <input formControlName="password" type="password"
                 class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
                 [class.border-error]="isInvalid('password')" [class.border-outline-variant]="!isInvalid('password')"
                 placeholder="5–16 characters" />
-              @if (isInvalid('password')) { <p class="mt-1 text-xs text-error">Password must be 5–16 characters.</p> }
+              @if (isInvalid('password')) { <p class="mt-1 text-xs text-error">{{ 'register.passwordRequired' | t }}</p> }
             </div>
 
             <div>
               <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">
-                Phone <span class="normal-case font-normal text-on-surface-variant/60">(optional)</span>
+                {{ 'register.phoneLabel' | t }} <span class="normal-case font-normal text-on-surface-variant/60">{{ 'register.phoneOptional' | t }}</span>
               </label>
               <input formControlName="phoneNumber" type="tel"
                 class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
@@ -79,9 +81,7 @@ import { ErrorResponseDto } from '../../../core/models';
             </div>
 
             @if (formError()) {
-              <div class="p-3 rounded-lg bg-error-container border border-error/20 text-sm text-on-error-container">
-                {{ formError() }}
-              </div>
+              <div class="p-3 rounded-lg bg-error-container border border-error/20 text-sm text-on-error-container">{{ formError() }}</div>
             }
 
             <button type="submit" [disabled]="isLoading()"
@@ -89,15 +89,15 @@ import { ErrorResponseDto } from '../../../core/models';
               @if (isLoading()) {
                 <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
               } @else {
-                Create Account
+                {{ 'register.submit' | t }}
                 <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
               }
             </button>
           </form>
 
           <p class="mt-6 text-center text-sm text-on-surface-variant">
-            Already have an account?
-            <a routerLink="/login" class="text-secondary font-medium hover:text-on-secondary-container transition-colors">Sign In</a>
+            {{ 'register.haveAccount' | t }}
+            <a routerLink="/login" class="text-secondary font-medium hover:text-on-secondary-container transition-colors">{{ 'register.signIn' | t }}</a>
           </p>
         </div>
       </div>
@@ -109,6 +109,7 @@ export class RegisterComponent {
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
   private readonly toast = inject(ErrorToastService);
+  private readonly i18n = inject(I18nService);
 
   readonly isLoading = signal(false);
   readonly formError = signal<string | null>(null);
@@ -131,24 +132,19 @@ export class RegisterComponent {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.formError.set(null);
     this.isLoading.set(true);
-
     const val = this.form.getRawValue();
     const dto = { ...val, phoneNumber: val.phoneNumber || undefined };
-
     this.userService.create(dto as any).subscribe({
       next: () => {
-        this.toast.show('Kayıt başarılı! Giriş yapabilirsiniz.', 'success');
+        this.toast.show(this.i18n.t('register.success'), 'success');
         this.router.navigate(['/login']);
       },
       error: (err: ErrorResponseDto) => {
         this.isLoading.set(false);
-        if (err?.errorCode === 'ALREADY_EXISTS') {
-          this.formError.set('Bu kullanıcı adı veya email zaten kullanılıyor.');
-        } else {
-          this.formError.set('Kayıt yapılamadı. Lütfen tekrar deneyin.');
-        }
+        this.formError.set(err?.errorCode === 'ALREADY_EXISTS'
+          ? this.i18n.t('register.alreadyExists')
+          : this.i18n.t('register.failed'));
       }
     });
   }
 }
-
