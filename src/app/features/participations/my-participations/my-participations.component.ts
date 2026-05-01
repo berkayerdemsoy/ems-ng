@@ -1,12 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { forkJoin, of } from 'rxjs';
-import { catchError, filter, take, switchMap } from 'rxjs/operators';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { EventService } from '../../../core/services/event.service';
 import { ParticipationService } from '../../../core/services/participation.service';
-import { AuthService } from '../../../core/services/auth.service';
 import { ParticipationResponseDto } from '../../../core/models';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
@@ -80,41 +75,13 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
   `
 })
 export class MyParticipationsComponent implements OnInit {
-  private readonly eventService = inject(EventService);
   private readonly participationService = inject(ParticipationService);
-  private readonly authService = inject(AuthService);
 
   readonly participations = signal<ParticipationResponseDto[]>([]);
   readonly isLoading = signal(true);
 
   ngOnInit(): void {
-    // Wait until currentUser is populated (APP_INITIALIZER may still be resolving)
-    toObservable(this.authService.currentUser).pipe(
-      filter(user => !!user),
-      take(1),
-      switchMap(user => {
-        const userEmail = user!.email;
-        return this.eventService.getAll(0, 100).pipe(
-          switchMap(page => {
-            if (page.empty) return of([]);
-            const requests = page.content.map(e =>
-              this.participationService.getByEvent(e.id).pipe(catchError(() => of([])))
-            );
-            return forkJoin(requests).pipe(
-              catchError(() => of([]))
-            );
-          }),
-          catchError(() => of([])),
-        ).pipe(
-          switchMap(results => {
-            const myParticipations = (results as ParticipationResponseDto[][])
-              .flat()
-              .filter((p: ParticipationResponseDto) => p.participantEmail === userEmail);
-            return of(myParticipations);
-          })
-        );
-      })
-    ).subscribe({
+    this.participationService.getMyTickets().subscribe({
       next: list => { this.participations.set(list); this.isLoading.set(false); },
       error: () => this.isLoading.set(false)
     });

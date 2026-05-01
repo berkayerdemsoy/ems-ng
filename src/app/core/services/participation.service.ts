@@ -16,5 +16,9 @@ export class ParticipationService {
   getByEvent(eventId: number): Observable<ParticipationResponseDto[]> {
     return this.http.get<ParticipationResponseDto[]>(`${this.base}/event/${eventId}`);
   }
+
+  getMyTickets(): Observable<ParticipationResponseDto[]> {
+    return this.http.get<ParticipationResponseDto[]>(`${this.base}/my-tickets`);
+  }
 }
 

@@ -20,9 +20,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 403) {
+      if (err.status === 401) {
         auth.logout();
         toast.show('Oturum süreniz doldu. Lütfen tekrar giriş yapın.', 'error');
+      } else if (err.status === 403) {
+        toast.show('Bu işlemi yapmaya yetkiniz yok.', 'error');
       } else if (err.status === 404) {
         toast.show('Kaynak bulunamadı.', 'error');
       } else if (err.status === 500) {
