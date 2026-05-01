@@ -86,21 +86,16 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
             <p class="text-base text-on-surface-variant/60 mt-2">Try different filters or explore all events.</p>
           </div>
         } @else {
-          @defer (on viewport) {
             <!-- Bento Grid -->
             <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
               @let events = eventsPage()!.content;
               @for (event of events; track event.id; let i = $index) {
-                <app-event-card [event]="event" [featured]="i === 0 && !hasFilter()" />
+                <app-event-card
+                  [event]="event"
+                  [featured]="i === 0 && !hasFilter()"
+                  [class]="(i === 0 && !hasFilter()) ? 'md:col-span-8' : 'md:col-span-4'" />
               }
             </section>
-          } @placeholder {
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-              @for (i of [1,2,3]; track i) {
-                <div class="md:col-span-4 glass-card rounded-xl h-64 animate-pulse"></div>
-              }
-            </div>
-          }
 
           <!-- Load More / Pagination -->
           @if (!eventsPage()!.last) {

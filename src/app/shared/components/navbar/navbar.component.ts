@@ -64,7 +64,7 @@ import { ErrorToastService } from '../error-toast/error-toast.service';
         }
       </div>
 
-      @if (auth.isLoggedIn() && !auth.isVerified()) {
+      @if (auth.isLoggedIn() && !auth.isVerified() && !verificationSent()) {
         <div class="bg-amber-50/80 backdrop-blur-sm border-t border-amber-200/40 px-8 py-2 flex items-center justify-between">
           <p class="text-sm text-amber-800 flex items-center gap-2">
             <span class="material-symbols-outlined" style="font-size:16px">warning</span>
@@ -84,6 +84,7 @@ export class NavbarComponent {
   private readonly userService = inject(UserService);
   private readonly toast = inject(ErrorToastService);
   readonly sending = signal(false);
+  readonly verificationSent = signal(false);
 
   initials(): string {
     const u = this.auth.currentUser();
@@ -96,7 +97,7 @@ export class NavbarComponent {
     if (!id || this.sending()) return;
     this.sending.set(true);
     this.userService.requestVerification(id).subscribe({
-      next: () => { this.sending.set(false); this.toast.show('Doğrulama emaili gönderildi!', 'success'); },
+      next: () => { this.sending.set(false); this.verificationSent.set(true); this.toast.show('Doğrulama emaili gönderildi!', 'success'); },
       error: () => { this.sending.set(false); }
     });
   }

@@ -11,9 +11,9 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
   imports: [RouterLink, DatePipe, CurrencyPipe, EventStatusPipe, AvailableSeatsPipe],
   template: `
     @if (featured()) {
-      <!-- Featured / Large card (col-span-8) -->
+      <!-- Featured / Large card -->
       <article [routerLink]="['/events', event().id]"
-               class="md:col-span-8 glass-card rounded-xl overflow-hidden group relative min-h-[400px] flex flex-col justify-end cursor-pointer">
+               class="glass-card rounded-xl overflow-hidden group relative min-h-[400px] flex flex-col justify-end cursor-pointer w-full h-full">
         <div class="absolute inset-0 bg-gradient-to-br from-surface-container to-surface z-0"></div>
         <div class="absolute top-1/3 right-1/4 w-48 h-48 bg-secondary-container/20 rounded-full blur-3xl z-0"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent z-10"></div>
@@ -52,7 +52,7 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
     } @else {
       <!-- Regular card -->
       <article [routerLink]="['/events', event().id]"
-               class="md:col-span-4 glass-card rounded-xl overflow-hidden group relative min-h-[280px] flex flex-col justify-end cursor-pointer">
+               class="glass-card rounded-xl overflow-hidden group relative min-h-[280px] flex flex-col justify-end cursor-pointer w-full h-full">
         <div class="absolute inset-0 bg-gradient-to-br from-surface-container-low to-surface z-0"></div>
         <div class="absolute top-0 right-0 w-20 h-20 bg-secondary-container/10 rounded-full blur-xl group-hover:bg-secondary-container/20 transition-colors duration-500 z-0"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10"></div>

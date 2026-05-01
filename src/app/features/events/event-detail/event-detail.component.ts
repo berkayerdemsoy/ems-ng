@@ -102,9 +102,9 @@ import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
             </div>
 
             <!-- Right: Registration + Capacity -->
-            <div class="lg:col-span-4 flex flex-col gap-6">
-              <!-- Registration Card (sticky) -->
-              <div class="bg-surface-container-lowest/90 backdrop-blur-2xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)] sticky top-24">
+            <div class="lg:col-span-4 flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+              <!-- Registration Card -->
+              <div class="bg-surface-container-lowest/90 backdrop-blur-2xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)]">
                 <h3 class="text-3xl font-medium text-on-surface mb-1">Registration</h3>
                 <p class="text-base text-on-surface-variant mb-8">Secure your spot at this experience.</p>
                 <div class="flex justify-between items-end mb-[4rem]">
