@@ -10,6 +10,7 @@ import { CategoryDto, ErrorResponseDto } from '../../../core/models';
 import { toBackendDateTime, toHtmlDatetimeLocal } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
+import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
 
 /** endDate > startDate kontrolü */
 function editDateRangeValidator(group: AbstractControl): ValidationErrors | null {
@@ -22,7 +23,7 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-event-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent],
+  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 left-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -123,19 +124,16 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
 
               <!-- Start + End Date -->
               <div class="grid grid-cols-2 gap-4">
-                <div class="relative">
-                  <input formControlName="startDate" type="datetime-local" id="ee_start"
-                    class="fl-input border border-outline-variant"
-                    (focus)="focusedField.set('startDate')" (blur)="focusedField.set(null)" />
-                  <label for="ee_start" class="fl-label fl-label-up">{{ 'eventEdit.startsLabel' | t }}</label>
+                <div>
+                  <app-datetime-picker
+                    formControlName="startDate"
+                    [label]="'eventEdit.startsLabel' | t" />
                 </div>
-                <div class="relative">
-                  <input formControlName="endDate" type="datetime-local" id="ee_end"
-                    class="fl-input border"
-                    [class.border-error]="form.errors?.['endBeforeStart'] && form.get('endDate')?.touched"
-                    [class.border-outline-variant]="!(form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)"
-                    (focus)="focusedField.set('endDate')" (blur)="focusedField.set(null)" />
-                  <label for="ee_end" class="fl-label fl-label-up">{{ 'eventEdit.endsLabel' | t }}</label>
+                <div>
+                  <app-datetime-picker
+                    formControlName="endDate"
+                    [label]="'eventEdit.endsLabel' | t"
+                    [invalid]="!!(form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)" />
                   @if (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched) {
                     <p class="mt-1 text-xs text-error">{{ 'eventEdit.endBeforeStart' | t }}</p>
                   }

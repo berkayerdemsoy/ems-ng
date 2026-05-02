@@ -114,7 +114,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                     {{ e.price === 0 ? 'Free' : (e.price | currency:'TRY':'symbol-narrow':'1.0-0') }}
                   </span>
                   @if (e.price > 0) {
-                    <span class="text-base text-on-surface-variant pb-2">{{ 'eventDetail.perPerson' | t }}</span>
+                    <span class="text-base text-on-surface-variant pb-2">{{ 'common.perPerson' | t }}</span>
                   }
                 </div>
 
@@ -209,6 +209,14 @@ export class EventDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadEvent(id);
+
+    // Check if already registered for this event
+    if (this.authService.currentUser()) {
+      this.participationService.getMyTickets().subscribe({
+        next: tickets => this.alreadyJoined.set(tickets.some(t => t.eventId === id)),
+        error: () => {}
+      });
+    }
   }
 
   private loadEvent(id: number): void {

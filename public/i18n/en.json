@@ -64,6 +64,7 @@
   "eventList.subtitle": "Immerse yourself in a curated collection of transcendent events, where art, technology, and connection converge.",
   "eventList.newExperience": "+ New Experience",
   "eventList.cityPlaceholder": "City or Region",
+  "eventList.dateLabel": "From Date",
   "eventList.allCategories": "All Categories",
   "eventList.clearFilter": "Clear",
   "eventList.discover": "Discover",

@@ -10,6 +10,7 @@ import { CategoryDto, ErrorResponseDto } from '../../../core/models';
 import { toBackendDateTime } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
+import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
 
 /** Grup-level validator: startDate geçmişte olamaz, endDate > startDate */
 function eventDateValidator(group: AbstractControl): ValidationErrors | null {
@@ -26,7 +27,7 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-event-create',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent],
+  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 right-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -155,28 +156,20 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
             <!-- Start + End Date -->
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <div class="relative">
-                  <input formControlName="startDate" type="datetime-local" [id]="'ec_start'"
-                    class="fl-input border"
-                    [class.border-error]="isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched)"
-                    [class.border-outline-variant]="!(isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched))"
-                    (focus)="focusedField.set('startDate')" (blur)="focusedField.set(null)" />
-                  <label for="ec_start" class="fl-label fl-label-up">{{ 'eventCreate.startsLabel' | t }}</label>
-                </div>
+                <app-datetime-picker
+                  formControlName="startDate"
+                  [label]="'eventCreate.startsLabel' | t"
+                  [invalid]="isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched)" />
                 @if (isInvalid('startDate')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.startRequired' | t }}</p> }
                 @else if (form.errors?.['pastStartDate'] && form.get('startDate')?.touched) {
                   <p class="mt-1 text-xs text-error">{{ 'eventCreate.pastStartDate' | t }}</p>
                 }
               </div>
               <div>
-                <div class="relative">
-                  <input formControlName="endDate" type="datetime-local" [id]="'ec_end'"
-                    class="fl-input border"
-                    [class.border-error]="isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)"
-                    [class.border-outline-variant]="!(isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched))"
-                    (focus)="focusedField.set('endDate')" (blur)="focusedField.set(null)" />
-                  <label for="ec_end" class="fl-label fl-label-up">{{ 'eventCreate.endsLabel' | t }}</label>
-                </div>
+                <app-datetime-picker
+                  formControlName="endDate"
+                  [label]="'eventCreate.endsLabel' | t"
+                  [invalid]="isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)" />
                 @if (isInvalid('endDate')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.endRequired' | t }}</p> }
                 @else if (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched) {
                   <p class="mt-1 text-xs text-error">{{ 'eventCreate.endBeforeStart' | t }}</p>

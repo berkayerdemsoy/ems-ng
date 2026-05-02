@@ -8,11 +8,12 @@ import { EventResponseDto, Page, CategoryDto } from '../../../core/models';
 import { EventCardComponent } from './event-card.component';
 import { toBackendDateTime } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe],
+  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe, DatetimePickerComponent],
   template: `
     <div class="pt-20 pb-24 relative">
       <!-- Ambient orbs -->
@@ -41,7 +42,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
           </p>
 
           <!-- Glass Filter Bar -->
-          <div class="glass-card rounded-full p-2 flex flex-col md:flex-row items-center gap-2 max-w-4xl">
+          <div class="glass-card rounded-full p-2 flex flex-col md:flex-row items-center gap-2 max-w-4xl" style="position:relative;z-index:40">
             <div class="flex-1 flex items-center px-4 w-full md:w-auto border-b md:border-b-0 md:border-r border-outline-variant/30 py-2 md:py-0">
               <span class="material-symbols-outlined text-outline mr-3" style="font-size:20px">location_on</span>
               <input [(ngModel)]="cityInput" (ngModelChange)="onCityChange($event)"
@@ -58,11 +59,12 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                 }
               </select>
             </div>
-            <div class="flex-1 flex items-center px-4 w-full md:w-auto py-2 md:py-0">
-              <span class="material-symbols-outlined text-outline mr-3" style="font-size:20px">calendar_month</span>
-              <input [(ngModel)]="startDateInput" (ngModelChange)="onDateChange()"
-                     class="bg-transparent border-none outline-none focus:ring-0 text-base text-on-surface-variant/60 w-full"
-                     type="date"/>
+            <div class="flex-1 w-full md:w-auto py-1 px-2">
+              <app-datetime-picker
+                [(ngModel)]="startDateInput"
+                (ngModelChange)="onDateChange()"
+                [showTime]="false"
+                [label]="'eventList.dateLabel' | t" />
             </div>
             <button (click)="clearFilters()"
                     class="bg-secondary-container text-on-secondary-container w-full md:w-auto px-8 py-3 rounded-full text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors ml-auto md:ml-2">
@@ -137,7 +139,7 @@ export class EventListComponent implements OnInit {
 
   cityInput = '';
   selectedCategoryId: number | null = null;
-  startDateInput = '';
+  startDateInput: string | null = null;
 
   constructor() {
     effect(() => {
@@ -159,8 +161,8 @@ export class EventListComponent implements OnInit {
     } else if (start) {
       const end = new Date(); end.setFullYear(end.getFullYear() + 2);
       obs$ = this.eventService.getByDateRange(
-        toBackendDateTime(start + 'T00:00'),
-        toBackendDateTime(end.toISOString().slice(0,16)),
+        toBackendDateTime(start),
+        toBackendDateTime(end.toISOString().slice(0, 16)),
         page
       );
     } else {
@@ -174,12 +176,12 @@ export class EventListComponent implements OnInit {
 
   onCityChange(val: string): void { this.cityFilter.set(val); this.currentPage.set(0); }
   onCategoryChange(val: number | null): void { this.categoryFilter.set(val); this.currentPage.set(0); }
-  onDateChange(): void { this.startDate.set(this.startDateInput); this.currentPage.set(0); }
+  onDateChange(): void { this.startDate.set(this.startDateInput ?? ''); this.currentPage.set(0); }
   onPageChange(page: number): void { this.currentPage.set(page); }
 
   clearFilters(): void {
     this.cityFilter.set(''); this.categoryFilter.set(null); this.startDate.set('');
-    this.cityInput = ''; this.selectedCategoryId = null; this.startDateInput = '';
+    this.cityInput = ''; this.selectedCategoryId = null; this.startDateInput = null;
     this.currentPage.set(0);
   }
 }
