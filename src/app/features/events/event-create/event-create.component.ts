@@ -11,6 +11,7 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
+import { CategorySelectComponent } from '../../../shared/components/category-select/category-select.component';
 
 /** Grup-level validator: startDate geçmişte olamaz, endDate > startDate */
 function eventDateValidator(group: AbstractControl): ValidationErrors | null {
@@ -27,7 +28,7 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-event-create',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent],
+  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent, CategorySelectComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 right-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -102,22 +103,12 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
 
             <!-- Category -->
             <div>
-              <div class="relative">
-                <select formControlName="categoryId" [id]="'ec_cat'"
-                  class="fl-select border"
-                  [class.border-error]="isInvalid('categoryId')"
-                  [class.border-outline-variant]="!isInvalid('categoryId')"
-                  (focus)="focusedField.set('categoryId')" (blur)="focusedField.set(null)">
-                  <option value=""></option>
-                  @for (cat of categories(); track cat.id) {
-                    <option [value]="cat.id">{{ cat.name }}</option>
-                  }
-                </select>
-                <label for="ec_cat" class="fl-label"
-                  [class.fl-label-up]="isFloating('categoryId')"
-                  [class.fl-label-down]="!isFloating('categoryId')">{{ 'eventCreate.categoryLabel' | t }}</label>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 pointer-events-none" style="font-size:20px">expand_more</span>
-              </div>
+              <app-category-select
+                formControlName="categoryId"
+                [categories]="categories()"
+                [label]="'eventCreate.categoryLabel' | t"
+                [showAll]="false"
+                [invalid]="isInvalid('categoryId')" />
               @if (isInvalid('categoryId')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.categoryRequired' | t }}</p> }
             </div>
 

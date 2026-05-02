@@ -11,6 +11,7 @@ import { toBackendDateTime, toHtmlDatetimeLocal } from '../../../core/utils/date
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
+import { CategorySelectComponent } from '../../../shared/components/category-select/category-select.component';
 
 /** endDate > startDate kontrolü */
 function editDateRangeValidator(group: AbstractControl): ValidationErrors | null {
@@ -23,7 +24,7 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-event-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent],
+  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent, CategorySelectComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 left-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -86,18 +87,12 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
               </div>
 
               <!-- Category -->
-              <div class="relative">
-                <select formControlName="categoryId" id="ee_cat"
-                  class="fl-select border border-outline-variant"
-                  (focus)="focusedField.set('categoryId')" (blur)="focusedField.set(null)">
-                  @for (cat of categories(); track cat.id) {
-                    <option [value]="cat.id">{{ cat.name }}</option>
-                  }
-                </select>
-                <label for="ee_cat" class="fl-label"
-                  [class.fl-label-up]="isFloating('categoryId')"
-                  [class.fl-label-down]="!isFloating('categoryId')">{{ 'eventEdit.categoryLabel' | t }}</label>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 pointer-events-none" style="font-size:20px">expand_more</span>
+              <div>
+                <app-category-select
+                  formControlName="categoryId"
+                  [categories]="categories()"
+                  [label]="'eventEdit.categoryLabel' | t"
+                  [showAll]="false" />
               </div>
 
               <!-- Capacity + Price -->

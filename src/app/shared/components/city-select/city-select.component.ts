@@ -32,14 +32,14 @@ let uid = 0;
           autocomplete="off"
           placeholder=" "
           [(ngModel)]="searchText"
+          (click)="onInputClick()"
           (input)="onInput()"
-          (focus)="onFocus()"
           (blur)="onBlur()"
           class="fl-input border transition-all pr-10"
           [class.border-error]="invalid"
           [class.border-outline-variant]="!invalid"
         />
-        <!-- Float Label -->
+        <!-- Float Label — based on selectedCity OR isFocused, not searchText -->
         <label
           [for]="inputId"
           class="fl-label"
@@ -57,7 +57,7 @@ let uid = 0;
       <!-- Dropdown -->
       @if (isOpen) {
         <div
-          class="city-dropdown absolute z-50 top-full mt-1 w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg shadow-xl max-h-52 overflow-y-auto"
+          class="city-dropdown absolute z-[200] top-full mt-1 w-full bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-[0_20px_60px_rgba(28,28,23,0.12)] max-h-52 overflow-y-auto"
           (mousedown)="$event.preventDefault()"
         >
           @if (filteredCities.length === 0) {
@@ -68,7 +68,7 @@ let uid = 0;
           @for (city of filteredCities; track city) {
             <button
               type="button"
-              class="w-full text-left px-4 py-2.5 text-sm text-on-surface hover:bg-surface-container transition-colors flex items-center justify-between"
+              class="w-full text-left px-4 py-2.5 text-sm text-on-surface hover:bg-surface-container transition-colors flex items-center justify-between border-b border-outline-variant/10 last:border-0"
               [class.bg-surface-container]="city === selectedCity"
               (click)="selectCity(city)"
             >
@@ -92,18 +92,19 @@ export class CitySelectComponent implements ControlValueAccessor, OnInit {
 
   private readonly http = inject(HttpClient);
 
-  searchText = '';
+  searchText   = '';
   selectedCity = '';
-  isOpen = false;
-  isFocused = false;
-  allCities: string[] = [];
+  isOpen       = false;
+  isFocused    = false;
+  allCities: string[]      = [];
   filteredCities: string[] = [];
 
   private onChange: (v: string) => void = () => {};
   private onTouched: () => void = () => {};
 
+  /** Float label up when a city is committed OR input is focused */
   get isLabelFloating(): boolean {
-    return !!(this.searchText || this.isFocused);
+    return !!(this.selectedCity || this.isFocused);
   }
 
   ngOnInit(): void {
@@ -115,26 +116,26 @@ export class CitySelectComponent implements ControlValueAccessor, OnInit {
     });
   }
 
-  onFocus(): void {
-    this.isFocused = true;
+  /** Every click on the input opens the dropdown with a fresh (empty) search */
+  onInputClick(): void {
+    this.isFocused  = true;
+    this.searchText = '';
+    this.filteredCities = [...this.allCities];
     this.isOpen = true;
-    this.filteredCities = this.filter(this.searchText);
   }
 
   onBlur(): void {
     this.isFocused = false;
-    this.isOpen = false;
+    this.isOpen    = false;
     this.onTouched();
-    const typed = this.searchText.trim();
-    if (typed !== this.selectedCity) {
-      this.selectedCity = typed;
-      this.onChange(typed);
-    }
+    // Restore the display text to the committed selected city
+    this.searchText = this.selectedCity;
   }
 
   onInput(): void {
     this.filteredCities = this.filter(this.searchText);
     this.isOpen = true;
+    // If user wrote and clears the text, reset the value
     if (!this.searchText) {
       this.selectedCity = '';
       this.onChange('');
@@ -143,9 +144,8 @@ export class CitySelectComponent implements ControlValueAccessor, OnInit {
 
   selectCity(city: string): void {
     this.selectedCity = city;
-    this.searchText = city;
-    this.filteredCities = this.filter(city);
-    this.isOpen = false;
+    this.searchText   = city;
+    this.isOpen       = false;
     this.onChange(city);
     this.onTouched();
   }
@@ -160,18 +160,11 @@ export class CitySelectComponent implements ControlValueAccessor, OnInit {
 
   writeValue(v: string): void {
     this.selectedCity = v ?? '';
-    this.searchText = v ?? '';
+    this.searchText   = v ?? '';
     if (v) this.filteredCities = this.filter(v);
   }
 
-  registerOnChange(fn: (v: string) => void): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(_disabled: boolean): void {}
+  registerOnChange(fn: (v: string) => void): void { this.onChange  = fn; }
+  registerOnTouched(fn: () => void): void          { this.onTouched = fn; }
+  setDisabledState(_disabled: boolean): void       {}
 }
-

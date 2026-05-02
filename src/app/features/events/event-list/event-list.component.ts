@@ -9,11 +9,12 @@ import { EventCardComponent } from './event-card.component';
 import { toBackendDateTime } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
+import { CategorySelectComponent } from '../../../shared/components/category-select/category-select.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe, DatetimePickerComponent],
+  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe, DatetimePickerComponent, CategorySelectComponent],
   template: `
     <div class="pt-20 pb-24 relative">
       <!-- Ambient orbs -->
@@ -49,15 +50,12 @@ import { DatetimePickerComponent } from '../../../shared/components/datetime-pic
                      class="bg-transparent border-none outline-none focus:ring-0 text-base text-on-surface placeholder-on-surface-variant/50 w-full"
                      [placeholder]="'eventList.cityPlaceholder' | t" type="text"/>
             </div>
-            <div class="flex-1 flex items-center px-4 w-full md:w-auto border-b md:border-b-0 md:border-r border-outline-variant/30 py-2 md:py-0">
-              <span class="material-symbols-outlined text-outline mr-3" style="font-size:20px">category</span>
-              <select [(ngModel)]="selectedCategoryId" (ngModelChange)="onCategoryChange($event)"
-                      class="bg-transparent border-none outline-none focus:ring-0 text-base text-on-surface w-full appearance-none">
-                <option [ngValue]="null">{{ 'eventList.allCategories' | t }}</option>
-                @for (cat of categories(); track cat.id) {
-                  <option [ngValue]="cat.id">{{ cat.name }}</option>
-                }
-              </select>
+            <div class="flex-1 w-full md:w-auto py-1 px-2">
+              <app-category-select
+                [(ngModel)]="selectedCategoryId"
+                (ngModelChange)="onCategoryChange($event)"
+                [categories]="categories()"
+                [label]="'eventList.allCategories' | t" />
             </div>
             <div class="flex-1 w-full md:w-auto py-1 px-2">
               <app-datetime-picker
@@ -174,14 +172,14 @@ export class EventListComponent implements OnInit {
     });
   }
 
-  onCityChange(val: string): void { this.cityFilter.set(val); this.currentPage.set(0); }
-  onCategoryChange(val: number | null): void { this.categoryFilter.set(val); this.currentPage.set(0); }
-  onDateChange(): void { this.startDate.set(this.startDateInput ?? ''); this.currentPage.set(0); }
-  onPageChange(page: number): void { this.currentPage.set(page); }
-
   clearFilters(): void {
     this.cityFilter.set(''); this.categoryFilter.set(null); this.startDate.set('');
     this.cityInput = ''; this.selectedCategoryId = null; this.startDateInput = null;
     this.currentPage.set(0);
   }
+
+  onCityChange(val: string): void     { this.cityFilter.set(val);  this.currentPage.set(0); }
+  onCategoryChange(val: number | null): void { this.categoryFilter.set(val); this.currentPage.set(0); }
+  onDateChange(): void  { this.startDate.set(this.startDateInput ?? ''); this.currentPage.set(0); }
+  onPageChange(page: number): void    { this.currentPage.set(page); }
 }

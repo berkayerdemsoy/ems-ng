@@ -1,12 +1,14 @@
 [
+  "İstanbul",
+  "Ankara",
+  "İzmir",
+  "Eskişehir",
   "Adana",
   "Adıyaman",
   "Afyonkarahisar",
   "Ağrı",
   "Aksaray",
   "Amasya",
-  "Ankara",
-  "Antalya",
   "Ardahan",
   "Artvin",
   "Aydın",
@@ -30,7 +32,6 @@
   "Elazığ",
   "Erzincan",
   "Erzurum",
-  "Eskişehir",
   "Gaziantep",
   "Giresun",
   "Gümüşhane",
@@ -38,8 +39,6 @@
   "Hatay",
   "Iğdır",
   "Isparta",
-  "İstanbul",
-  "İzmir",
   "Kahramanmaraş",
   "Karabük",
   "Karaman",
@@ -81,4 +80,3 @@
   "Yozgat",
   "Zonguldak"
 ]
-
