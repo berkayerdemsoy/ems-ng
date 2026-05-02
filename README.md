@@ -1,3 +1,63 @@
+# EMS-NG (Event Management System - Frontend)
+
+EMS-NG, **Angular tabanlı bir etkinlik yönetim sistemi frontend uygulamasıdır**.  
+Bu proje, özellikle **ayrı bir backend servisi ile entegre çalışacak şekilde** geliştirilmiştir ve kimlik doğrulama, yetkilendirme, etkinlik yönetimi, kategori yönetimi ve katılım akışlarını backend API üzerinden yürütür.
+
+## Proje Amacı
+
+Bu uygulamanın temel amacı:
+
+- Kullanıcıların etkinlikleri listeleyip görüntüleyebilmesi
+- Doğrulanmış kullanıcıların etkinlik oluşturup düzenleyebilmesi
+- Katılım süreçlerinin yönetilebilmesi
+- Admin tarafında kullanıcı/kategori yönetiminin yapılabilmesi
+- Tüm bu akışların **backend tabanlı REST API** ile uçtan uca entegre şekilde çalışması
+
+## Backend Entegrasyonu
+
+Bu frontend, aşağıdaki backend odaklı yapılarla çalışır:
+
+- JWT tabanlı kimlik doğrulama
+- Route guard’lar ile rol/doğrulama kontrolü (`auth`, `role`, `verified`)
+- HTTP interceptor ile token ekleme ve global hata yönetimi
+- Backend’den gelen DTO/model yapılarıyla tip güvenli veri akışı
+- E-posta doğrulama ve kullanıcı oturum akışları
+
+> Not: Bu repository frontend içindir. Projenin asıl iş kuralları ve veri yönetimi backend API tarafında çalışır.
+
+## Teknolojiler
+
+- Angular
+- TypeScript
+- RxJS
+- Angular Router
+- HTTP Client + Interceptor
+- Guard yapısı
+- Pipe ve shared component mimarisi
+
+## Özellikler
+
+- Giriş / Kayıt / E-posta doğrulama
+- Etkinlik listeleme, detay, oluşturma, düzenleme
+- Kategori yönetimi
+- Katılım yönetimi
+- Profil ve admin kullanıcı ekranları
+- i18n (TR / EN)
+- Hata bildirim toast yapısı
+
+## Proje Yapısı (Özet)
+
+- `src/app/core`: servisler, interceptor, guard, modeller
+- `src/app/features`: işlevsel modüller (auth, events, categories, users, vb.)
+- `src/app/shared`: ortak component ve pipe yapıları
+- `public/i18n`: dil dosyaları
+
+## Kurulum
+
+```bash
+npm install
+
+
 # EmsNg
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
