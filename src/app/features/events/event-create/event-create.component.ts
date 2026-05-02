@@ -9,6 +9,7 @@ import { I18nService } from '../../../core/services/i18n.service';
 import { CategoryDto, ErrorResponseDto } from '../../../core/models';
 import { toBackendDateTime } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 
 /** Grup-level validator: startDate geçmişte olamaz, endDate > startDate */
 function eventDateValidator(group: AbstractControl): ValidationErrors | null {
@@ -25,7 +26,7 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-event-create',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 right-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -40,93 +41,142 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
         <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)]">
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
 
+            <!-- Title -->
             <div>
-              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.titleLabel' | t }}</label>
-              <input formControlName="title" type="text"
-                class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                [class.border-error]="isInvalid('title')" [class.border-outline-variant]="!isInvalid('title')"
-                [placeholder]="'eventCreate.titlePlaceholder' | t" />
+              <div class="relative">
+                <input formControlName="title" type="text" [id]="'ec_title'"
+                  class="fl-input border"
+                  [class.border-error]="isInvalid('title')"
+                  [class.border-outline-variant]="!isInvalid('title')"
+                  placeholder=" "
+                  (focus)="focusedField.set('title')" (blur)="focusedField.set(null)" />
+                <label for="ec_title" class="fl-label"
+                  [class.fl-label-up]="isFloating('title')"
+                  [class.fl-label-down]="!isFloating('title')">{{ 'eventCreate.titleLabel' | t }}</label>
+              </div>
               @if (isInvalid('title')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.titleRequired' | t }}</p> }
             </div>
 
+            <!-- Description -->
             <div>
-              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.descLabel' | t }}</label>
-              <textarea formControlName="description" rows="4"
-                class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all resize-none"
-                [class.border-error]="isInvalid('description')" [class.border-outline-variant]="!isInvalid('description')"
-                [placeholder]="'eventCreate.descPlaceholder' | t"></textarea>
+              <div class="relative">
+                <textarea formControlName="description" rows="4" [id]="'ec_desc'"
+                  class="fl-input border resize-none"
+                  [class.border-error]="isInvalid('description')"
+                  [class.border-outline-variant]="!isInvalid('description')"
+                  placeholder=" "
+                  (focus)="focusedField.set('description')" (blur)="focusedField.set(null)"></textarea>
+                <label for="ec_desc" class="fl-label"
+                  [class.fl-label-up]="isFloating('description')"
+                  [class.fl-label-down]="!isFloating('description')">{{ 'eventCreate.descLabel' | t }}</label>
+              </div>
               @if (isInvalid('description')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.descRequired' | t }}</p> }
             </div>
 
+            <!-- City + Address -->
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.cityLabel' | t }}</label>
-                <input formControlName="city" type="text"
-                  class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                  [class.border-error]="isInvalid('city')" [class.border-outline-variant]="!isInvalid('city')"
-                  [placeholder]="'eventCreate.cityPlaceholder' | t" />
+                <app-city-select
+                  formControlName="city"
+                  [label]="'eventCreate.cityLabel' | t"
+                  [invalid]="isInvalid('city')"
+                  [noResultsText]="'Şehir bulunamadı'" />
                 @if (isInvalid('city')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.cityRequired' | t }}</p> }
               </div>
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.addressLabel' | t }}</label>
-                <input formControlName="address" type="text"
-                  class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                  [class.border-error]="isInvalid('address')" [class.border-outline-variant]="!isInvalid('address')"
-                  [placeholder]="'eventCreate.addressPlaceholder' | t" />
+                <div class="relative">
+                  <input formControlName="address" type="text" [id]="'ec_addr'"
+                    class="fl-input border"
+                    [class.border-error]="isInvalid('address')"
+                    [class.border-outline-variant]="!isInvalid('address')"
+                    placeholder=" "
+                    (focus)="focusedField.set('address')" (blur)="focusedField.set(null)" />
+                  <label for="ec_addr" class="fl-label"
+                    [class.fl-label-up]="isFloating('address')"
+                    [class.fl-label-down]="!isFloating('address')">{{ 'eventCreate.addressLabel' | t }}</label>
+                </div>
                 @if (isInvalid('address')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.addressRequired' | t }}</p> }
               </div>
             </div>
 
+            <!-- Category -->
             <div>
-              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.categoryLabel' | t }}</label>
-              <select formControlName="categoryId"
-                class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all appearance-none"
-                [class.border-error]="isInvalid('categoryId')" [class.border-outline-variant]="!isInvalid('categoryId')">
-                <option value="">{{ 'eventCreate.selectCategory' | t }}</option>
-                @for (cat of categories(); track cat.id) {
-                  <option [value]="cat.id">{{ cat.name }}</option>
-                }
-              </select>
+              <div class="relative">
+                <select formControlName="categoryId" [id]="'ec_cat'"
+                  class="fl-select border"
+                  [class.border-error]="isInvalid('categoryId')"
+                  [class.border-outline-variant]="!isInvalid('categoryId')"
+                  (focus)="focusedField.set('categoryId')" (blur)="focusedField.set(null)">
+                  <option value=""></option>
+                  @for (cat of categories(); track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                  }
+                </select>
+                <label for="ec_cat" class="fl-label"
+                  [class.fl-label-up]="isFloating('categoryId')"
+                  [class.fl-label-down]="!isFloating('categoryId')">{{ 'eventCreate.categoryLabel' | t }}</label>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 pointer-events-none" style="font-size:20px">expand_more</span>
+              </div>
               @if (isInvalid('categoryId')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.categoryRequired' | t }}</p> }
             </div>
 
+            <!-- Capacity + Price -->
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.capacityLabel' | t }}</label>
-                <input formControlName="capacity" type="number" min="1"
-                  class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                  [class.border-error]="isInvalid('capacity')" [class.border-outline-variant]="!isInvalid('capacity')"
-                  placeholder="100" />
+                <div class="relative">
+                  <input formControlName="capacity" type="number" min="1" [id]="'ec_cap'"
+                    class="fl-input border"
+                    [class.border-error]="isInvalid('capacity')"
+                    [class.border-outline-variant]="!isInvalid('capacity')"
+                    placeholder=" "
+                    (focus)="focusedField.set('capacity')" (blur)="focusedField.set(null)" />
+                  <label for="ec_cap" class="fl-label"
+                    [class.fl-label-up]="isFloating('capacity')"
+                    [class.fl-label-down]="!isFloating('capacity')">{{ 'eventCreate.capacityLabel' | t }}</label>
+                </div>
                 @if (isInvalid('capacity')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.capacityMin' | t }}</p> }
               </div>
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.priceLabel' | t }}</label>
-                <input formControlName="price" type="number" min="0" step="0.01"
-                  class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                  [class.border-error]="isInvalid('price')" [class.border-outline-variant]="!isInvalid('price')"
-                  [placeholder]="'eventCreate.pricePlaceholder' | t" />
+                <div class="relative">
+                  <input formControlName="price" type="number" min="0" step="0.01" [id]="'ec_price'"
+                    class="fl-input border"
+                    [class.border-error]="isInvalid('price')"
+                    [class.border-outline-variant]="!isInvalid('price')"
+                    placeholder=" "
+                    (focus)="focusedField.set('price')" (blur)="focusedField.set(null)" />
+                  <label for="ec_price" class="fl-label"
+                    [class.fl-label-up]="isFloating('price')"
+                    [class.fl-label-down]="!isFloating('price')">{{ 'eventCreate.priceLabel' | t }}</label>
+                </div>
                 @if (isInvalid('price')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.priceRequired' | t }}</p> }
               </div>
             </div>
 
+            <!-- Start + End Date -->
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.startsLabel' | t }}</label>
-                <input formControlName="startDate" type="datetime-local"
-                  class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                  [class.border-error]="isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched)"
-                  [class.border-outline-variant]="!(isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched))" />
+                <div class="relative">
+                  <input formControlName="startDate" type="datetime-local" [id]="'ec_start'"
+                    class="fl-input border"
+                    [class.border-error]="isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched)"
+                    [class.border-outline-variant]="!(isInvalid('startDate') || (form.errors?.['pastStartDate'] && form.get('startDate')?.touched))"
+                    (focus)="focusedField.set('startDate')" (blur)="focusedField.set(null)" />
+                  <label for="ec_start" class="fl-label fl-label-up">{{ 'eventCreate.startsLabel' | t }}</label>
+                </div>
                 @if (isInvalid('startDate')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.startRequired' | t }}</p> }
                 @else if (form.errors?.['pastStartDate'] && form.get('startDate')?.touched) {
                   <p class="mt-1 text-xs text-error">{{ 'eventCreate.pastStartDate' | t }}</p>
                 }
               </div>
               <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventCreate.endsLabel' | t }}</label>
-                <input formControlName="endDate" type="datetime-local"
-                  class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                  [class.border-error]="isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)"
-                  [class.border-outline-variant]="!(isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched))" />
+                <div class="relative">
+                  <input formControlName="endDate" type="datetime-local" [id]="'ec_end'"
+                    class="fl-input border"
+                    [class.border-error]="isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)"
+                    [class.border-outline-variant]="!(isInvalid('endDate') || (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched))"
+                    (focus)="focusedField.set('endDate')" (blur)="focusedField.set(null)" />
+                  <label for="ec_end" class="fl-label fl-label-up">{{ 'eventCreate.endsLabel' | t }}</label>
+                </div>
                 @if (isInvalid('endDate')) { <p class="mt-1 text-xs text-error">{{ 'eventCreate.endRequired' | t }}</p> }
                 @else if (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched) {
                   <p class="mt-1 text-xs text-error">{{ 'eventCreate.endBeforeStart' | t }}</p>
@@ -171,6 +221,7 @@ export class EventCreateComponent implements OnInit {
   readonly categories = signal<CategoryDto[]>([]);
   readonly isLoading = signal(false);
   readonly formError = signal<string | null>(null);
+  readonly focusedField = signal<string | null>(null);
 
   readonly form = this.fb.group({
     title:       ['', Validators.required],
@@ -191,6 +242,13 @@ export class EventCreateComponent implements OnInit {
   isInvalid(field: string): boolean {
     const ctrl = this.form.get(field);
     return !!(ctrl?.invalid && ctrl.touched);
+  }
+
+  /** Returns true when label should float to the top */
+  isFloating(field: string): boolean {
+    const val = this.form.get(field)?.value;
+    const hasVal = val !== null && val !== undefined && val !== '';
+    return hasVal || this.focusedField() === field;
   }
 
   onSubmit(): void {
@@ -218,3 +276,4 @@ export class EventCreateComponent implements OnInit {
     });
   }
 }
+

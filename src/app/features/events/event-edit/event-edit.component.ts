@@ -6,11 +6,12 @@ import { CategoryService } from '../../../core/services/category.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ErrorToastService } from '../../../shared/components/error-toast/error-toast.service';
 import { I18nService } from '../../../core/services/i18n.service';
-import { EventResponseDto, CategoryDto, ErrorResponseDto } from '../../../core/models';
+import { CategoryDto, ErrorResponseDto } from '../../../core/models';
 import { toBackendDateTime, toHtmlDatetimeLocal } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 
-/** endDate > startDate kontrolü (edit'te geçmiş tarih olabilir, o yüzden future kontrolü yok) */
+/** endDate > startDate kontrolü */
 function editDateRangeValidator(group: AbstractControl): ValidationErrors | null {
   const start = group.get('startDate')?.value;
   const end   = group.get('endDate')?.value;
@@ -21,7 +22,7 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-event-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <div class="absolute top-32 left-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -41,59 +42,110 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
         } @else {
           <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)]">
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
-              <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.titleLabel' | t }}</label>
-                <input formControlName="title" type="text" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all" />
+
+              <!-- Title -->
+              <div class="relative">
+                <input formControlName="title" type="text" id="ee_title"
+                  class="fl-input border border-outline-variant"
+                  placeholder=" "
+                  (focus)="focusedField.set('title')" (blur)="focusedField.set(null)" />
+                <label for="ee_title" class="fl-label"
+                  [class.fl-label-up]="isFloating('title')"
+                  [class.fl-label-down]="!isFloating('title')">{{ 'eventEdit.titleLabel' | t }}</label>
               </div>
-              <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.descLabel' | t }}</label>
-                <textarea formControlName="description" rows="4" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all resize-none"></textarea>
+
+              <!-- Description -->
+              <div class="relative">
+                <textarea formControlName="description" rows="4" id="ee_desc"
+                  class="fl-input border border-outline-variant resize-none"
+                  placeholder=" "
+                  (focus)="focusedField.set('description')" (blur)="focusedField.set(null)"></textarea>
+                <label for="ee_desc" class="fl-label"
+                  [class.fl-label-up]="isFloating('description')"
+                  [class.fl-label-down]="!isFloating('description')">{{ 'eventEdit.descLabel' | t }}</label>
               </div>
+
+              <!-- City + Address -->
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.cityLabel' | t }}</label>
-                  <input formControlName="city" type="text" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all" />
+                  <app-city-select
+                    formControlName="city"
+                    [label]="'eventEdit.cityLabel' | t"
+                    [noResultsText]="'Şehir bulunamadı'" />
                 </div>
-                <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.addressLabel' | t }}</label>
-                  <input formControlName="address" type="text" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all" />
+                <div class="relative">
+                  <input formControlName="address" type="text" id="ee_addr"
+                    class="fl-input border border-outline-variant"
+                    placeholder=" "
+                    (focus)="focusedField.set('address')" (blur)="focusedField.set(null)" />
+                  <label for="ee_addr" class="fl-label"
+                    [class.fl-label-up]="isFloating('address')"
+                    [class.fl-label-down]="!isFloating('address')">{{ 'eventEdit.addressLabel' | t }}</label>
                 </div>
               </div>
-              <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.categoryLabel' | t }}</label>
-                <select formControlName="categoryId" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all appearance-none">
-                  @for (cat of categories(); track cat.id) { <option [value]="cat.id">{{ cat.name }}</option> }
+
+              <!-- Category -->
+              <div class="relative">
+                <select formControlName="categoryId" id="ee_cat"
+                  class="fl-select border border-outline-variant"
+                  (focus)="focusedField.set('categoryId')" (blur)="focusedField.set(null)">
+                  @for (cat of categories(); track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                  }
                 </select>
+                <label for="ee_cat" class="fl-label"
+                  [class.fl-label-up]="isFloating('categoryId')"
+                  [class.fl-label-down]="!isFloating('categoryId')">{{ 'eventEdit.categoryLabel' | t }}</label>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 pointer-events-none" style="font-size:20px">expand_more</span>
               </div>
+
+              <!-- Capacity + Price -->
               <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.capacityLabel' | t }}</label>
-                  <input formControlName="capacity" type="number" min="1" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all" />
+                <div class="relative">
+                  <input formControlName="capacity" type="number" min="1" id="ee_cap"
+                    class="fl-input border border-outline-variant"
+                    placeholder=" "
+                    (focus)="focusedField.set('capacity')" (blur)="focusedField.set(null)" />
+                  <label for="ee_cap" class="fl-label"
+                    [class.fl-label-up]="isFloating('capacity')"
+                    [class.fl-label-down]="!isFloating('capacity')">{{ 'eventEdit.capacityLabel' | t }}</label>
                 </div>
-                <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.priceLabel' | t }}</label>
-                  <input formControlName="price" type="number" min="0" step="0.01" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all" />
+                <div class="relative">
+                  <input formControlName="price" type="number" min="0" step="0.01" id="ee_price"
+                    class="fl-input border border-outline-variant"
+                    placeholder=" "
+                    (focus)="focusedField.set('price')" (blur)="focusedField.set(null)" />
+                  <label for="ee_price" class="fl-label"
+                    [class.fl-label-up]="isFloating('price')"
+                    [class.fl-label-down]="!isFloating('price')">{{ 'eventEdit.priceLabel' | t }}</label>
                 </div>
               </div>
+
+              <!-- Start + End Date -->
               <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.startsLabel' | t }}</label>
-                  <input formControlName="startDate" type="datetime-local" class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all" />
+                <div class="relative">
+                  <input formControlName="startDate" type="datetime-local" id="ee_start"
+                    class="fl-input border border-outline-variant"
+                    (focus)="focusedField.set('startDate')" (blur)="focusedField.set(null)" />
+                  <label for="ee_start" class="fl-label fl-label-up">{{ 'eventEdit.startsLabel' | t }}</label>
                 </div>
-                <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'eventEdit.endsLabel' | t }}</label>
-                  <input formControlName="endDate" type="datetime-local"
-                    class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                <div class="relative">
+                  <input formControlName="endDate" type="datetime-local" id="ee_end"
+                    class="fl-input border"
                     [class.border-error]="form.errors?.['endBeforeStart'] && form.get('endDate')?.touched"
-                    [class.border-outline-variant]="!(form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)" />
+                    [class.border-outline-variant]="!(form.errors?.['endBeforeStart'] && form.get('endDate')?.touched)"
+                    (focus)="focusedField.set('endDate')" (blur)="focusedField.set(null)" />
+                  <label for="ee_end" class="fl-label fl-label-up">{{ 'eventEdit.endsLabel' | t }}</label>
                   @if (form.errors?.['endBeforeStart'] && form.get('endDate')?.touched) {
                     <p class="mt-1 text-xs text-error">{{ 'eventEdit.endBeforeStart' | t }}</p>
                   }
                 </div>
               </div>
+
               @if (formError()) {
                 <div class="p-3 rounded-lg bg-error-container border border-error/20 text-sm text-on-error-container">{{ formError() }}</div>
               }
+
               <div class="flex gap-3 pt-2">
                 <button type="button" (click)="router.navigate(['/events', eventId])"
                   class="px-6 py-3 text-xs font-semibold tracking-widest uppercase text-on-surface-variant border border-outline-variant hover:bg-surface-container rounded-lg transition-colors">
@@ -130,6 +182,7 @@ export class EventEditComponent implements OnInit {
   readonly isLoading = signal(true);
   readonly isSaving = signal(false);
   readonly formError = signal<string | null>(null);
+  readonly focusedField = signal<string | null>(null);
   eventId = 0;
 
   readonly form = this.fb.group({
@@ -159,6 +212,13 @@ export class EventEditComponent implements OnInit {
       },
       error: () => this.router.navigate(['/events'])
     });
+  }
+
+  /** Returns true when label should float to the top */
+  isFloating(field: string): boolean {
+    const val = this.form.get(field)?.value;
+    const hasVal = val !== null && val !== undefined && val !== '';
+    return hasVal || this.focusedField() === field;
   }
 
   onSubmit(): void {
