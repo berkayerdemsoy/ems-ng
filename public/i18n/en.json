@@ -222,7 +222,28 @@
   "adminUsers.deleteConfirm": "— delete this user permanently? This cannot be undone.",
 
   "categoryManage.deleteSuccess": "Category deleted.",
-  "categoryManage.updateSuccess": "Category updated."
+  "categoryManage.updateSuccess": "Category updated.",
+
+  "verifyEmail.loading": "Verifying your email",
+  "verifyEmail.loadingSubtitle": "Please wait a moment…",
+  "verifyEmail.successBadge": "Verified",
+  "verifyEmail.successTitle": "Email Confirmed!",
+  "verifyEmail.successSubtitle": "Your email address has been successfully verified. You can now sign in.",
+  "verifyEmail.goToLogin": "Sign In",
+  "verifyEmail.invalidTitle": "Invalid Link",
+  "verifyEmail.invalidMessage": "This verification link is not valid or has already been used. Please request a new verification email.",
+  "verifyEmail.expiredTitle": "Link Expired",
+  "verifyEmail.expiredMessage": "This verification link has expired. Please request a new verification email.",
+  "verifyEmail.generalTitle": "Something Went Wrong",
+  "verifyEmail.generalMessage": "Email verification failed. Please try again.",
+  "verifyEmail.noTokenTitle": "Link Missing",
+  "verifyEmail.noTokenMessage": "No verification token was found. Please use the link from your verification email.",
+  "verifyEmail.resend": "Resend Verification Email",
+  "verifyEmail.resending": "Sending…",
+  "verifyEmail.resentTitle": "Check Your Inbox",
+  "verifyEmail.resentSuccess": "Verification email sent! Please check your inbox.",
+  "verifyEmail.resentFailed": "Could not send verification email. Please try again.",
+  "verifyEmail.loginFirst": "Sign in to request a new link"
 }
 
 

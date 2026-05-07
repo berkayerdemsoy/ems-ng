@@ -100,7 +100,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
             {{ 'nav.verifyBanner' | t }}
           </p>
           <button (click)="sendVerification()" [disabled]="sending()"
-                  class="text-xs font-semibold text-amber-700 underline hover:text-amber-900 transition-colors disabled:opacity-50">
+                  class="cursor-pointer text-xs font-semibold text-amber-700 underline hover:text-amber-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
             {{ sending() ? ('nav.sending' | t) : ('nav.sendVerification' | t) }}
           </button>
         </div>

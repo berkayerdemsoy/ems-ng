@@ -222,7 +222,28 @@
   "adminUsers.deleteConfirm": "kullanıcısını silmek istiyor musunuz? Bu işlem geri alınamaz.",
 
   "categoryManage.deleteSuccess": "Kategori silindi.",
-  "categoryManage.updateSuccess": "Kategori güncellendi."
+  "categoryManage.updateSuccess": "Kategori güncellendi.",
+
+  "verifyEmail.loading": "E-posta doğrulanıyor",
+  "verifyEmail.loadingSubtitle": "Lütfen bekleyin…",
+  "verifyEmail.successBadge": "Doğrulandı",
+  "verifyEmail.successTitle": "E-posta Onaylandı!",
+  "verifyEmail.successSubtitle": "E-posta adresiniz başarıyla doğrulandı. Artık giriş yapabilirsiniz.",
+  "verifyEmail.goToLogin": "Giriş Yap",
+  "verifyEmail.invalidTitle": "Geçersiz Link",
+  "verifyEmail.invalidMessage": "Doğrulama linki geçersiz veya daha önce kullanılmış. Lütfen yeni bir doğrulama e-postası talep edin.",
+  "verifyEmail.expiredTitle": "Link Süresi Doldu",
+  "verifyEmail.expiredMessage": "Doğrulama linkinin süresi dolmuş. Lütfen yeni bir doğrulama e-postası talep edin.",
+  "verifyEmail.generalTitle": "Bir Hata Oluştu",
+  "verifyEmail.generalMessage": "E-posta doğrulama başarısız oldu. Lütfen tekrar deneyin.",
+  "verifyEmail.noTokenTitle": "Link Bulunamadı",
+  "verifyEmail.noTokenMessage": "Doğrulama token'ı bulunamadı. Lütfen doğrulama e-postasındaki linki kullanın.",
+  "verifyEmail.resend": "Doğrulama E-postasını Yeniden Gönder",
+  "verifyEmail.resending": "Gönderiliyor…",
+  "verifyEmail.resentTitle": "Gelen Kutunuzu Kontrol Edin",
+  "verifyEmail.resentSuccess": "Doğrulama e-postası gönderildi! Lütfen gelen kutunuzu kontrol edin.",
+  "verifyEmail.resentFailed": "Doğrulama e-postası gönderilemedi. Lütfen tekrar deneyin.",
+  "verifyEmail.loginFirst": "Yeni link talep etmek için giriş yapın"
 }
 
 

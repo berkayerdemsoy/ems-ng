@@ -32,7 +32,10 @@ export class UserService {
 
   confirmEmail(token: string): Observable<string> {
     const params = new HttpParams().set('token', token);
-    return this.http.get<string>(`${this.base}/confirm-email`, { params });
+    // responseType: 'text' prevents Angular from trying to JSON-parse a plain-text
+    // success response — without it a 200 OK with a plain-text body triggers the
+    // error handler (JSON SyntaxError) even though the DB was updated successfully.
+    return this.http.get(`${this.base}/confirm-email`, { params, responseType: 'text' });
   }
 
   becomeOwner(id: number): Observable<void> {

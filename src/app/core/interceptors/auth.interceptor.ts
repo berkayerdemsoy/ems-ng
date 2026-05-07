@@ -7,11 +7,15 @@ import { ErrorResponseDto } from '../models';
 
 const PUBLIC_URLS = ['/users/create', '/users/login', '/users/confirm-email'];
 
+/** URLs whose errors are handled by the component — suppress global toasts. */
+const SILENT_ERROR_URLS = ['/users/confirm-email'];
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const toast = inject(ErrorToastService);
 
   const isPublic = PUBLIC_URLS.some(url => req.url.includes(url));
+  const isSilent = SILENT_ERROR_URLS.some(url => req.url.includes(url));
   const token = localStorage.getItem('token');
 
   const authReq = (token && !isPublic)
@@ -20,16 +24,20 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401) {
-        auth.logout();
-        toast.show('Oturum süreniz doldu. Lütfen tekrar giriş yapın.', 'error');
-      } else if (err.status === 403) {
-        toast.show('Bu işlemi yapmaya yetkiniz yok.', 'error');
-      } else if (err.status === 404) {
-        toast.show('Kaynak bulunamadı.', 'error');
-      } else if (err.status === 500) {
-        toast.show('Bir sunucu hatası oluştu.', 'error');
+      if (!isSilent) {
+        if (err.status === 401) {
+          auth.logout();
+          toast.show('Oturum süreniz doldu. Lütfen tekrar giriş yapın.', 'error');
+        } else if (err.status === 403) {
+          toast.show('Bu işlemi yapmaya yetkiniz yok.', 'error');
+        } else if (err.status === 404) {
+          toast.show('Kaynak bulunamadı.', 'error');
+        } else if (err.status === 500) {
+          toast.show('Bir sunucu hatası oluştu.', 'error');
+        }
       }
+      // Re-throw the parsed DTO when available; fall back to the raw HttpErrorResponse
+      // so callers can always read .status as a reliable fallback.
       return throwError(() => (err.error as ErrorResponseDto) ?? err);
     })
   );
