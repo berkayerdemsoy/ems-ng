@@ -9,6 +9,7 @@
   "nav.verifyBanner": "Email adresinizi doğrulamanız gerekiyor.",
   "nav.sendVerification": "Doğrulama E-postası Gönder",
   "nav.sending": "Gönderiliyor...",
+  "nav.dismissBanner": "Kapat",
 
   "common.cancel": "İptal",
   "common.save": "Kaydet",
@@ -190,6 +191,7 @@
   "profile.emailVerified": "Email doğrulandı",
   "profile.sendLink": "Doğrulama Linki Gönder",
   "profile.sendingLink": "Gönderiliyor...",
+  "profile.linkSent": "Gönderildi",
   "profile.becomeOwnerTitle": "Etkinlik Sahibi Ol",
   "profile.becomeOwnerDesc": "Etkinlik oluşturma ve yönetme özelliği.",
   "profile.verifyFirst": "Önce email adresinizi doğrulayın.",

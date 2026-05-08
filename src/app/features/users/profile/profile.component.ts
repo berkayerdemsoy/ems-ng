@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
@@ -49,9 +49,15 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                     <p class="text-xs text-on-surface-variant">{{ user.email }}</p>
                   </div>
                 </div>
-                <button (click)="sendVerification()" [disabled]="sendingVerification()"
-                  class="text-xs font-semibold tracking-widest uppercase text-secondary underline hover:text-on-secondary-container disabled:opacity-50 transition-colors">
-                  {{ sendingVerification() ? ('profile.sendingLink' | t) : ('profile.sendLink' | t) }}
+                <button (click)="sendVerification()" [disabled]="sendingVerification() || cooldownLeft() > 0"
+                  class="text-xs font-semibold tracking-widest uppercase text-secondary underline hover:text-on-secondary-container disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed transition-colors">
+                  @if (sendingVerification()) {
+                    {{ 'profile.sendingLink' | t }}
+                  } @else if (cooldownLeft() > 0) {
+                    {{ 'profile.linkSent' | t }} ({{ cooldownLeft() }}s)
+                  } @else {
+                    {{ 'profile.sendLink' | t }}
+                  }
                 </button>
               </div>
             } @else {
@@ -171,7 +177,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
     </div>
   `
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   readonly auth = inject(AuthService);
   private readonly userService = inject(UserService);
   private readonly toast = inject(ErrorToastService);
@@ -182,6 +188,11 @@ export class ProfileComponent implements OnInit {
   readonly sendingVerification = signal(false);
   readonly becomingOwner = signal(false);
   readonly editMode = signal(false);
+  readonly cooldownLeft = signal(0);
+
+  private readonly COOLDOWN_MS = 30_000;
+  private readonly STORAGE_KEY = 'verifyCooldownAt';
+  private cooldownInterval: ReturnType<typeof setInterval> | null = null;
 
   readonly form = this.fb.group({
     firstName:   [{ value: '', disabled: true }],
@@ -199,6 +210,17 @@ export class ProfileComponent implements OnInit {
         email: user.email, phoneNumber: user.phoneNumber
       });
     }
+    // Restore cooldown if still active from a previous click
+    const sentAt = Number(localStorage.getItem(this.STORAGE_KEY) ?? 0);
+    if (sentAt) {
+      const remaining = Math.ceil((this.COOLDOWN_MS - (Date.now() - sentAt)) / 1000);
+      if (remaining > 0) this.startCooldown(remaining);
+      else localStorage.removeItem(this.STORAGE_KEY);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stopCooldown();
   }
 
   enableEdit(): void {
@@ -239,15 +261,42 @@ export class ProfileComponent implements OnInit {
 
   sendVerification(): void {
     const id = this.auth.currentUser()?.id;
-    if (!id) return;
+    if (!id || this.cooldownLeft() > 0) return;
     this.sendingVerification.set(true);
     this.userService.requestVerification(id).subscribe({
       next: () => {
         this.sendingVerification.set(false);
-        this.toast.show('Doğrulama emaili gönderildi. Email kutunuzu kontrol edin.', 'success');
+        this.toast.show(this.i18n.t('profile.verificationSent'), 'success');
+        localStorage.setItem(this.STORAGE_KEY, String(Date.now()));
+        this.startCooldown(30);
       },
       error: () => { this.sendingVerification.set(false); }
     });
+  }
+
+  private startCooldown(seconds: number): void {
+    this.cooldownLeft.set(seconds);
+    this.stopCooldown();
+    this.cooldownInterval = setInterval(() => {
+      const next = this.cooldownLeft() - 1;
+      this.cooldownLeft.set(next);
+      // Check verification status every 5 seconds
+      if (next % 5 === 0) {
+        const id = this.auth.currentUser()?.id;
+        if (id) this.auth.refreshUser(id);
+      }
+      if (next <= 0) {
+        this.stopCooldown();
+        localStorage.removeItem(this.STORAGE_KEY);
+      }
+    }, 1000);
+  }
+
+  private stopCooldown(): void {
+    if (this.cooldownInterval) {
+      clearInterval(this.cooldownInterval);
+      this.cooldownInterval = null;
+    }
   }
 
   becomeOwner(): void {

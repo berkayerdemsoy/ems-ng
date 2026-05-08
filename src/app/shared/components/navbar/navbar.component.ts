@@ -94,15 +94,22 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       </div>
 
       @if (auth.isLoggedIn() && !auth.isVerified() && !verificationSent()) {
-        <div class="bg-amber-50/80 backdrop-blur-sm border-t border-amber-200/40 px-8 py-2 flex items-center justify-between">
+        <div class="bg-amber-50/80 backdrop-blur-sm border-t border-amber-200/40 px-8 py-2 flex items-center justify-between gap-4">
           <p class="text-sm text-amber-800 flex items-center gap-2">
             <span class="material-symbols-outlined" style="font-size:16px">warning</span>
             {{ 'nav.verifyBanner' | t }}
           </p>
-          <button (click)="sendVerification()" [disabled]="sending()"
-                  class="cursor-pointer text-xs font-semibold text-amber-700 underline hover:text-amber-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-            {{ sending() ? ('nav.sending' | t) : ('nav.sendVerification' | t) }}
-          </button>
+          <div class="flex items-center gap-4 shrink-0">
+            <button (click)="sendVerification()" [disabled]="sending()"
+                    class="cursor-pointer text-xs font-semibold text-amber-700 underline hover:text-amber-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ sending() ? ('nav.sending' | t) : ('nav.sendVerification' | t) }}
+            </button>
+            <button (click)="dismissBanner()"
+                    class="text-amber-600 hover:text-amber-900 transition-colors"
+                    [title]="'nav.dismissBanner' | t">
+              <span class="material-symbols-outlined" style="font-size:18px">close</span>
+            </button>
+          </div>
         </div>
       }
     </nav>
@@ -126,10 +133,20 @@ export class NavbarComponent {
     const id = this.auth.currentUser()?.id;
     if (!id || this.sending()) return;
     this.sending.set(true);
+    // Hide banner immediately on click
+    this.dismissBanner();
     this.userService.requestVerification(id).subscribe({
-      next: () => { this.sending.set(false); this.verificationSent.set(true); this.toast.show(this.i18n.t('profile.verificationSent'), 'success'); },
+      next: () => {
+        this.sending.set(false);
+        this.toast.show(this.i18n.t('profile.verificationSent'), 'success');
+      },
       error: () => { this.sending.set(false); }
     });
+  }
+
+  dismissBanner(): void {
+    sessionStorage.setItem('verificationSent', '1');
+    this.verificationSent.set(true);
   }
 }
 

@@ -9,6 +9,7 @@
   "nav.verifyBanner": "Your email address needs to be verified.",
   "nav.sendVerification": "Send Verification Email",
   "nav.sending": "Sending...",
+  "nav.dismissBanner": "Dismiss",
 
   "common.cancel": "Cancel",
   "common.save": "Save",
@@ -190,6 +191,7 @@
   "profile.emailVerified": "Email verified",
   "profile.sendLink": "Send Verification Link",
   "profile.sendingLink": "Sending...",
+  "profile.linkSent": "Sent",
   "profile.becomeOwnerTitle": "Become an Event Owner",
   "profile.becomeOwnerDesc": "Gain the ability to create and manage events.",
   "profile.verifyFirst": "Verify your email first to unlock this.",

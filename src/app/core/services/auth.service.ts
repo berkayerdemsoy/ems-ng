@@ -62,6 +62,7 @@ export class AuthService {
 
   private clearSession(): void {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('verificationSent');
     this.currentUserSignal.set(null);
   }
 }
