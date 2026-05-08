@@ -77,7 +77,10 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
               </label>
               <input formControlName="phoneNumber" type="tel"
                 class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                placeholder="+90 5XX XXX XX XX" />
+                placeholder="5XX XXX XX XX" />
+              @if (isInvalid('phoneNumber')) {
+                <p class="mt-1 text-xs text-error">{{ 'register.phoneRequired' | t }}</p>
+              }
             </div>
 
             @if (formError()) {

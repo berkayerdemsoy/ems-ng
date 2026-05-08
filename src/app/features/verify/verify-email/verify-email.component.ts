@@ -41,12 +41,22 @@ type ResendState = 'idle' | 'sending' | 'sent' | 'failed';
               <h2 class="text-[32px] leading-[1.2] tracking-[-0.02em] font-light text-on-surface mb-3">
                 {{ 'verifyEmail.successTitle' | t }}
               </h2>
-              <p class="text-base text-on-surface-variant mb-8">{{ 'verifyEmail.successSubtitle' | t }}</p>
-              <button (click)="router.navigate(['/login'])"
-                class="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-4 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] flex justify-center items-center gap-2">
-                {{ 'verifyEmail.goToLogin' | t }}
-                <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
-              </button>
+              <p class="text-base text-on-surface-variant mb-8">
+                {{ (auth.currentUser() ? 'verifyEmail.successSubtitleLoggedIn' : 'verifyEmail.successSubtitle') | t }}
+              </p>
+              @if (auth.currentUser()) {
+                <button (click)="router.navigate(['/events'])"
+                  class="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-4 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] flex justify-center items-center gap-2">
+                  {{ 'verifyEmail.goToEvents' | t }}
+                  <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
+                </button>
+              } @else {
+                <button (click)="router.navigate(['/login'])"
+                  class="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-4 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] flex justify-center items-center gap-2">
+                  {{ 'verifyEmail.goToLogin' | t }}
+                  <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
+                </button>
+              }
             }
 
             <!-- ─── INVALID LINK ────────────────────────────────── -->

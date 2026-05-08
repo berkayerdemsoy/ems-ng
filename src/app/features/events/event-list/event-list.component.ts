@@ -10,11 +10,12 @@ import { toBackendDateTime } from '../../../core/utils/date.utils';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { DatetimePickerComponent } from '../../../shared/components/datetime-picker/datetime-picker.component';
 import { CategorySelectComponent } from '../../../shared/components/category-select/category-select.component';
+import { CitySelectComponent } from '../../../shared/components/city-select/city-select.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe, DatetimePickerComponent, CategorySelectComponent],
+  imports: [FormsModule, RouterLink, EventCardComponent, TranslatePipe, DatetimePickerComponent, CategorySelectComponent, CitySelectComponent],
   template: `
     <div class="pt-20 pb-24 relative">
       <!-- Ambient orbs -->
@@ -43,12 +44,13 @@ import { CategorySelectComponent } from '../../../shared/components/category-sel
           </p>
 
           <!-- Glass Filter Bar -->
-          <div class="glass-card rounded-full p-2 flex flex-col md:flex-row items-center gap-2 max-w-4xl" style="position:relative;z-index:40">
-            <div class="flex-1 flex items-center px-4 w-full md:w-auto border-b md:border-b-0 md:border-r border-outline-variant/30 py-2 md:py-0">
-              <span class="material-symbols-outlined text-outline mr-3" style="font-size:20px">location_on</span>
-              <input [(ngModel)]="cityInput" (ngModelChange)="onCityChange($event)"
-                     class="bg-transparent border-none outline-none focus:ring-0 text-base text-on-surface placeholder-on-surface-variant/50 w-full"
-                     [placeholder]="'eventList.cityPlaceholder' | t" type="text"/>
+          <div class="glass-card rounded-2xl p-2 flex flex-col md:flex-row items-center gap-2 max-w-4xl" style="position:relative;z-index:40">
+            <div class="flex-1 w-full md:w-auto py-1 px-2 border-b md:border-b-0 md:border-r border-outline-variant/30">
+              <app-city-select
+                [(ngModel)]="cityInput"
+                (ngModelChange)="onCityChange($event)"
+                [label]="'eventList.cityPlaceholder' | t"
+                noResultsText="Şehir bulunamadı" />
             </div>
             <div class="flex-1 w-full md:w-auto py-1 px-2">
               <app-category-select
