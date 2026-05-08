@@ -8,7 +8,7 @@ import { ErrorResponseDto } from '../models';
 const PUBLIC_URLS = ['/users/create', '/users/login', '/users/confirm-email'];
 
 /** URLs whose errors are handled by the component — suppress global toasts. */
-const SILENT_ERROR_URLS = ['/users/confirm-email'];
+const SILENT_ERROR_URLS = ['/users/confirm-email', '/users/login', '/users/create'];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
