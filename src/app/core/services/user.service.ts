@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { UserCreateDto, UserUpdateDto, UserResponseDto } from '../models';
+import { UserCreateDto, UserUpdateDto, UserResponseDto, ChangePasswordDto } from '../models';
 import { Page } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -40,6 +40,10 @@ export class UserService {
 
   becomeOwner(id: number): Observable<void> {
     return this.http.post<void>(`${this.base}/owner/${id}`, null);
+  }
+
+  changePassword(dto: ChangePasswordDto): Observable<void> {
+    return this.http.put<void>(`${this.base}/profile/password`, dto);
   }
 
   getAll(page = 0, size = 20): Observable<Page<UserResponseDto>> {

@@ -10,6 +10,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
+  host: { class: 'block' },
   template: `
     <div class="min-h-screen flex items-center justify-center px-4 py-12 pt-28 relative">
       <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>

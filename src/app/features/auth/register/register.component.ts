@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { ErrorToastService } from '../../../shared/components/error-toast/error-toast.service';
@@ -7,10 +7,17 @@ import { I18nService } from '../../../core/services/i18n.service';
 import { ErrorResponseDto } from '../../../core/models';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
+function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const password = group.get('password')?.value;
+  const confirm  = group.get('confirmPassword')?.value;
+  return password && confirm && password !== confirm ? { passwordMismatch: true } : null;
+}
+
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
+  host: { class: 'block' },
   template: `
     <div class="min-h-screen flex items-center justify-center px-4 py-12 pt-28 relative">
       <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
@@ -25,7 +32,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
         <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_30px_60px_rgba(28,28,23,0.05)]">
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.firstNameLabel' | t }}</label>
                 <input formControlName="firstName" type="text"
@@ -62,13 +69,40 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
               @if (isInvalid('email')) { <p class="mt-1 text-xs text-error">{{ 'register.emailRequired' | t }}</p> }
             </div>
 
+            <!-- Password -->
             <div>
               <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.passwordLabel' | t }}</label>
-              <input formControlName="password" type="password"
-                class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                [class.border-error]="isInvalid('password')" [class.border-outline-variant]="!isInvalid('password')"
-                placeholder="5–16 characters" />
+              <div class="relative">
+                <input formControlName="password" [type]="showPassword() ? 'text' : 'password'"
+                  class="w-full px-4 py-3 pr-12 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                  [class.border-error]="isInvalid('password')" [class.border-outline-variant]="!isInvalid('password')"
+                  placeholder="5–16 characters" />
+                <button type="button" (click)="showPassword.set(!showPassword())"
+                  class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-on-surface transition-colors">
+                  <span class="material-symbols-outlined" style="font-size:20px">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
               @if (isInvalid('password')) { <p class="mt-1 text-xs text-error">{{ 'register.passwordRequired' | t }}</p> }
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+              <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'register.confirmPasswordLabel' | t }}</label>
+              <div class="relative">
+                <input formControlName="confirmPassword" [type]="showConfirmPassword() ? 'text' : 'password'"
+                  class="w-full px-4 py-3 pr-12 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                  [class.border-error]="isInvalidConfirm()" [class.border-outline-variant]="!isInvalidConfirm()"
+                  placeholder="••••••••" />
+                <button type="button" (click)="showConfirmPassword.set(!showConfirmPassword())"
+                  class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-on-surface transition-colors">
+                  <span class="material-symbols-outlined" style="font-size:20px">{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
+              @if (isInvalid('confirmPassword') && form.get('confirmPassword')?.errors?.['required']) {
+                <p class="mt-1 text-xs text-error">{{ 'register.confirmPasswordRequired' | t }}</p>
+              } @else if (isInvalidConfirm()) {
+                <p class="mt-1 text-xs text-error">{{ 'register.passwordMismatch' | t }}</p>
+              }
             </div>
 
             <div>
@@ -116,28 +150,41 @@ export class RegisterComponent {
 
   readonly isLoading = signal(false);
   readonly formError = signal<string | null>(null);
+  readonly showPassword = signal(false);
+  readonly showConfirmPassword = signal(false);
 
   readonly form = this.fb.group({
-    firstName:   ['', Validators.required],
-    lastName:    ['', Validators.required],
-    username:    ['', Validators.required],
-    email:       ['', [Validators.required, Validators.email]],
-    password:    ['', [Validators.required, Validators.minLength(5), Validators.maxLength(16)]],
-    phoneNumber: ['']
-  });
+    firstName:       ['', Validators.required],
+    lastName:        ['', Validators.required],
+    username:        ['', Validators.required],
+    email:           ['', [Validators.required, Validators.email]],
+    password:        ['', [Validators.required, Validators.minLength(5), Validators.maxLength(16)]],
+    confirmPassword: ['', Validators.required],
+    phoneNumber:     ['']
+  }, { validators: passwordMatchValidator });
 
   isInvalid(field: string): boolean {
     const ctrl = this.form.get(field);
     return !!(ctrl?.invalid && ctrl.touched);
   }
 
+  /** True when confirm field is touched AND (field-level or group-level mismatch error exists) */
+  isInvalidConfirm(): boolean {
+    const ctrl = this.form.get('confirmPassword');
+    if (!ctrl?.touched) return false;
+    return ctrl.invalid || !!this.form.errors?.['passwordMismatch'];
+  }
+
   onSubmit(): void {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
     this.formError.set(null);
     this.isLoading.set(true);
     const val = this.form.getRawValue();
     const dto = { ...val, phoneNumber: val.phoneNumber || undefined };
-    this.userService.create(dto as any).subscribe({
+    // confirmPassword is only for UI validation — omit from payload
+    const { confirmPassword: _, ...payload } = dto;
+    this.userService.create(payload as any).subscribe({
       next: () => {
         this.toast.show(this.i18n.t('register.success'), 'success');
         this.router.navigate(['/login']);

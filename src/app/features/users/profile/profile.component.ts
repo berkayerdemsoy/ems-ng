@@ -1,11 +1,17 @@
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 import { ErrorToastService } from '../../../shared/components/error-toast/error-toast.service';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ErrorResponseDto } from '../../../core/models';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+
+function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const newPass = group.get('newPassword')?.value;
+  const confirm = group.get('confirmNewPassword')?.value;
+  return newPass && confirm && newPass !== confirm ? { passwordMismatch: true } : null;
+}
 
 @Component({
   selector: 'app-profile',
@@ -31,7 +37,15 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                 {{ user.firstName[0] }}{{ user.lastName[0] }}
               </div>
               <div>
-                <p class="text-xl font-medium text-on-surface">{{ user.firstName }} {{ user.lastName }}</p>
+                <div class="flex items-center gap-2">
+                  <p class="text-xl font-medium text-on-surface">{{ user.firstName }} {{ user.lastName }}</p>
+                  @if (user.verified) {
+                    <span class="flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold tracking-widest uppercase rounded-full bg-green-100 text-green-700 border border-green-200/70">
+                      <span class="material-symbols-outlined" style="font-size:13px">verified</span>
+                      {{ 'profile.verified' | t }}
+                    </span>
+                  }
+                </div>
                 <p class="text-sm text-on-surface-variant">&#64;{{ user.username }}</p>
                 <span class="inline-block px-3 py-0.5 text-[11px] font-semibold tracking-widest uppercase rounded-full mt-2" [class]="roleBadge(user.role)">
                   {{ user.role }}
@@ -59,11 +73,6 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                     {{ 'profile.sendLink' | t }}
                   }
                 </button>
-              </div>
-            } @else {
-              <div class="flex items-center gap-3 p-4 bg-green-50 border border-green-200/60 rounded-lg">
-                <span class="material-symbols-outlined text-green-600" style="font-size:20px">mark_email_read</span>
-                <p class="text-sm text-green-800 font-medium">{{ 'profile.emailVerified' | t }} — {{ user.email }}</p>
               </div>
             }
 
@@ -93,7 +102,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
             }
           </div>
 
-          <!-- Update Form -->
+          <!-- Update Profile Form -->
           <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_20px_40px_rgba(28,28,23,0.03)]">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-2xl font-medium text-on-surface">{{ 'profile.updateProfile' | t }}</h2>
@@ -109,7 +118,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.firstNameLabel' | t }}</label>
+                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.firstNameLabel' | t }}</label>
                   <input formControlName="firstName" type="text"
                     class="w-full px-4 py-3 border rounded-lg text-base text-on-surface focus:outline-none transition-all"
                     [class]="editMode()
@@ -117,7 +126,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                       : 'bg-surface-container/40 border-transparent cursor-default select-none'" />
                 </div>
                 <div>
-                <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.lastNameLabel' | t }}</label>
+                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.lastNameLabel' | t }}</label>
                   <input formControlName="lastName" type="text"
                     class="w-full px-4 py-3 border rounded-lg text-base text-on-surface focus:outline-none transition-all"
                     [class]="editMode()
@@ -145,15 +154,6 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
               </div>
 
               @if (editMode()) {
-                <div>
-                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">
-                    {{ 'profile.passwordLabel' | t }} <span class="normal-case text-on-surface-variant/60 font-normal">{{ 'profile.passwordNote' | t }}</span>
-                  </label>
-                  <input formControlName="password" type="password"
-                    class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                    placeholder="••••••••" />
-                </div>
-
                 <div class="flex gap-3 pt-2">
                   <button type="button" (click)="cancelEdit()"
                     class="px-6 py-3 text-xs font-semibold tracking-widest uppercase text-on-surface-variant border border-outline-variant hover:bg-surface-container rounded-lg transition-colors">
@@ -172,6 +172,100 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
               }
             </form>
           </div>
+
+          <!-- Change Password Card -->
+          <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-8 border border-outline-variant/30 shadow-[0_20px_40px_rgba(28,28,23,0.03)]">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-medium text-on-surface">{{ 'profile.changePasswordTitle' | t }}</h2>
+              @if (!passwordEditMode()) {
+                <button type="button" (click)="passwordEditMode.set(true)"
+                  class="flex items-center gap-2 px-5 py-2 text-xs font-semibold tracking-widest uppercase rounded-full border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant">
+                  <span class="material-symbols-outlined" style="font-size:16px">lock_reset</span>
+                  {{ 'profile.changePasswordBtn' | t }}
+                </button>
+              }
+            </div>
+
+            @if (passwordEditMode()) {
+              <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="space-y-5">
+
+                <!-- Old Password -->
+                <div>
+                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.oldPasswordLabel' | t }}</label>
+                  <div class="relative">
+                    <input formControlName="oldPassword" [type]="showOldPassword() ? 'text' : 'password'"
+                      class="w-full px-4 py-3 pr-12 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                      [class.border-error]="isPwdInvalid('oldPassword')" [class.border-outline-variant]="!isPwdInvalid('oldPassword')"
+                      placeholder="••••••••" />
+                    <button type="button" (click)="showOldPassword.set(!showOldPassword())"
+                      class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-on-surface transition-colors">
+                      <span class="material-symbols-outlined" style="font-size:20px">{{ showOldPassword() ? 'visibility_off' : 'visibility' }}</span>
+                    </button>
+                  </div>
+                  @if (isPwdInvalid('oldPassword')) {
+                    <p class="mt-1 text-xs text-error">{{ 'profile.oldPasswordRequired' | t }}</p>
+                  }
+                </div>
+
+                <!-- New Password -->
+                <div>
+                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.newPasswordLabel' | t }}</label>
+                  <div class="relative">
+                    <input formControlName="newPassword" [type]="showNewPassword() ? 'text' : 'password'"
+                      class="w-full px-4 py-3 pr-12 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                      [class.border-error]="isPwdInvalid('newPassword')" [class.border-outline-variant]="!isPwdInvalid('newPassword')"
+                      placeholder="5–16 characters" />
+                    <button type="button" (click)="showNewPassword.set(!showNewPassword())"
+                      class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-on-surface transition-colors">
+                      <span class="material-symbols-outlined" style="font-size:20px">{{ showNewPassword() ? 'visibility_off' : 'visibility' }}</span>
+                    </button>
+                  </div>
+                  @if (isPwdInvalid('newPassword')) {
+                    <p class="mt-1 text-xs text-error">{{ 'profile.newPasswordRequired' | t }}</p>
+                  }
+                </div>
+
+                <!-- Confirm New Password -->
+                <div>
+                  <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'profile.confirmNewPasswordLabel' | t }}</label>
+                  <div class="relative">
+                    <input formControlName="confirmNewPassword" [type]="showConfirmPassword() ? 'text' : 'password'"
+                      class="w-full px-4 py-3 pr-12 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                      [class.border-error]="isConfirmPwdInvalid()" [class.border-outline-variant]="!isConfirmPwdInvalid()"
+                      placeholder="••••••••" />
+                    <button type="button" (click)="showConfirmPassword.set(!showConfirmPassword())"
+                      class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-on-surface transition-colors">
+                      <span class="material-symbols-outlined" style="font-size:20px">{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</span>
+                    </button>
+                  </div>
+                  @if (passwordForm.get('confirmNewPassword')?.touched && passwordForm.get('confirmNewPassword')?.errors?.['required']) {
+                    <p class="mt-1 text-xs text-error">{{ 'profile.confirmNewPasswordRequired' | t }}</p>
+                  } @else if (isConfirmPwdInvalid()) {
+                    <p class="mt-1 text-xs text-error">{{ 'profile.passwordMismatch' | t }}</p>
+                  }
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                  <button type="button" (click)="cancelPasswordEdit()"
+                    class="px-6 py-3 text-xs font-semibold tracking-widest uppercase text-on-surface-variant border border-outline-variant hover:bg-surface-container rounded-lg transition-colors">
+                    {{ 'profile.cancel' | t }}
+                  </button>
+                  <button type="submit" [disabled]="isChangingPassword()"
+                    class="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
+                    @if (isChangingPassword()) {
+                      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    } @else {
+                      {{ 'profile.changePasswordBtn' | t }}
+                      <span class="material-symbols-outlined" style="font-size:18px">lock_reset</span>
+                    }
+                  </button>
+                </div>
+              </form>
+            } @else {
+              <p class="text-sm text-on-surface-variant">••••••••••••</p>
+            }
+          </div>
+
         }
       </div>
     </div>
@@ -184,23 +278,37 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private readonly i18n = inject(I18nService);
   private readonly fb = inject(FormBuilder);
 
-  readonly isSaving = signal(false);
+  readonly isSaving          = signal(false);
   readonly sendingVerification = signal(false);
-  readonly becomingOwner = signal(false);
-  readonly editMode = signal(false);
-  readonly cooldownLeft = signal(0);
+  readonly becomingOwner     = signal(false);
+  readonly editMode          = signal(false);
+  readonly cooldownLeft      = signal(0);
+
+  // Password change signals
+  readonly passwordEditMode    = signal(false);
+  readonly isChangingPassword  = signal(false);
+  readonly showOldPassword     = signal(false);
+  readonly showNewPassword     = signal(false);
+  readonly showConfirmPassword = signal(false);
 
   private readonly COOLDOWN_MS = 30_000;
   private readonly STORAGE_KEY = 'verifyCooldownAt';
   private cooldownInterval: ReturnType<typeof setInterval> | null = null;
 
+  // Profile form (no password field anymore)
   readonly form = this.fb.group({
     firstName:   [{ value: '', disabled: true }],
     lastName:    [{ value: '', disabled: true }],
-    email:       [{ value: '', disabled: true }],   // her zaman disabled
+    email:       [{ value: '', disabled: true }],
     phoneNumber: [{ value: '', disabled: true }],
-    password:    [{ value: '', disabled: true }],
   });
+
+  // Separate password change form with cross-field validator
+  readonly passwordForm = this.fb.group({
+    oldPassword:        ['', Validators.required],
+    newPassword:        ['', [Validators.required, Validators.minLength(5), Validators.maxLength(16)]],
+    confirmNewPassword: ['', Validators.required],
+  }, { validators: passwordMatchValidator });
 
   ngOnInit(): void {
     const user = this.auth.currentUser();
@@ -227,8 +335,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.form.get('firstName')?.enable();
     this.form.get('lastName')?.enable();
     this.form.get('phoneNumber')?.enable();
-    this.form.get('password')?.enable();
-    // email intentionally stays disabled
     this.editMode.set(true);
   }
 
@@ -237,7 +343,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (user) {
       this.form.patchValue({
         firstName: user.firstName, lastName: user.lastName,
-        email: user.email, phoneNumber: user.phoneNumber, password: ''
+        email: user.email, phoneNumber: user.phoneNumber
       });
     }
     this.disableEditableFields();
@@ -245,9 +351,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   private disableEditableFields(): void {
-    ['firstName', 'lastName', 'phoneNumber', 'password'].forEach(f =>
-      this.form.get(f)?.disable()
-    );
+    ['firstName', 'lastName', 'phoneNumber'].forEach(f => this.form.get(f)?.disable());
+  }
+
+  cancelPasswordEdit(): void {
+    this.passwordForm.reset();
+    this.passwordEditMode.set(false);
+    this.showOldPassword.set(false);
+    this.showNewPassword.set(false);
+    this.showConfirmPassword.set(false);
+  }
+
+  /** Field-level error helper for the profile form */
+  isPwdInvalid(field: string): boolean {
+    const ctrl = this.passwordForm.get(field);
+    return !!(ctrl?.invalid && ctrl.touched);
+  }
+
+  /** Group-level mismatch error for confirmNewPassword */
+  isConfirmPwdInvalid(): boolean {
+    const ctrl = this.passwordForm.get('confirmNewPassword');
+    if (!ctrl?.touched) return false;
+    return ctrl.invalid || !!this.passwordForm.errors?.['passwordMismatch'];
   }
 
   roleBadge(role: string): string {
@@ -319,18 +444,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.isSaving.set(true);
     const val = this.form.getRawValue();
     const dto: any = {};
-    if (val.firstName)   dto.firstName = val.firstName;
-    if (val.lastName)    dto.lastName = val.lastName;
+    if (val.firstName)   dto.firstName   = val.firstName;
+    if (val.lastName)    dto.lastName    = val.lastName;
     if (val.phoneNumber) dto.phoneNumber = val.phoneNumber;
-    if (val.password)    dto.password = val.password;
-    // email intentionally excluded — backend should not receive it
 
     this.userService.update(id, dto).subscribe({
       next: () => {
         this.auth.refreshUser(id);
         this.isSaving.set(false);
         this.toast.show(this.i18n.t('profile.successUpdate'), 'success');
-        this.form.patchValue({ password: '' });
         this.disableEditableFields();
         this.editMode.set(false);
       },
@@ -342,5 +464,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
       }
     });
   }
-}
 
+  onChangePassword(): void {
+    this.passwordForm.markAllAsTouched();
+    if (this.passwordForm.invalid) return;
+
+    this.isChangingPassword.set(true);
+    const { oldPassword, newPassword } = this.passwordForm.getRawValue();
+
+    this.userService.changePassword({ oldPassword: oldPassword!, newPassword: newPassword! }).subscribe({
+      next: () => {
+        this.isChangingPassword.set(false);
+        this.toast.show(this.i18n.t('profile.changePasswordSuccess'), 'success');
+        this.cancelPasswordEdit();
+      },
+      error: (err: ErrorResponseDto) => {
+        this.isChangingPassword.set(false);
+        const msg = err?.errorCode === 'INVALID_CREDENTIALS' || err?.errorCode === 'WRONG_PASSWORD'
+          ? this.i18n.t('profile.wrongOldPassword')
+          : this.i18n.t('profile.changePasswordFailed');
+        this.toast.show(msg, 'error');
+      }
+    });
+  }
+}

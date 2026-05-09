@@ -16,10 +16,14 @@ export interface UserLoginDto {
 
 export interface UserUpdateDto {
   email?: string;
-  password?: string;
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
+}
+
+export interface ChangePasswordDto {
+  oldPassword: string;
+  newPassword: string;
 }
 
 export interface UserResponseDto {

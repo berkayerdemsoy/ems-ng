@@ -72,7 +72,8 @@ let _uid = 0;
   <!-- ── Panel ────────────────────────────────────────────────────────── -->
   @if (isOpen()) {
     <div
-      class="absolute z-[200] mt-2 left-0 w-[21rem] bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-[0_24px_60px_rgba(28,28,23,0.12)] overflow-hidden"
+      class="absolute z-[200] left-0 w-[21rem] bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-[0_24px_60px_rgba(28,28,23,0.12)] overflow-hidden"
+      [class]="openUpward() ? 'bottom-full mb-2' : 'top-full mt-2'"
     >
 
       <!-- Month navigation header -->
@@ -224,6 +225,7 @@ export class DatetimePickerComponent implements ControlValueAccessor {
 
   // ── Internal writable signals ─────────────────────────────────────────────
   readonly isOpen      = signal(false);
+  readonly openUpward  = signal(false);
   readonly viewYear    = signal(new Date().getFullYear());
   readonly viewMonth   = signal(new Date().getMonth());  // 0-indexed
   readonly pendingDate = signal<Date | null>(null);
@@ -301,6 +303,11 @@ export class DatetimePickerComponent implements ControlValueAccessor {
       this.viewYear.set(now.getFullYear());
       this.viewMonth.set(now.getMonth());
     }
+    // Detect whether the panel fits below; if not, open upward
+    const rect = (this.el.nativeElement as HTMLElement).getBoundingClientRect();
+    const panelHeight = this.showTime() ? 460 : 330;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    this.openUpward.set(spaceBelow < panelHeight && rect.top > panelHeight);
     this.isOpen.set(true);
   }
 
