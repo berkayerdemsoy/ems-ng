@@ -53,7 +53,16 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                           <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-xs font-semibold text-on-surface-variant border border-outline-variant/30">
                             {{ user.firstName[0] }}{{ user.lastName[0] }}
                           </div>
-                          <span class="text-base font-medium text-on-surface">{{ user.username }}</span>
+                          <!-- Username + tooltip -->
+                          <span class="relative group/tip">
+                            <span class="text-base font-medium text-on-surface cursor-default">{{ user.username }}</span>
+                            @if (user.firstName || user.lastName) {
+                              <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-inverse-surface text-inverse-on-surface text-xs font-medium whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 shadow-lg z-50 select-none">
+                                {{ user.firstName }} {{ user.lastName }}
+                                <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-inverse-surface"></span>
+                              </span>
+                            }
+                          </span>
                         </div>
                       </td>
                       <td class="px-6 py-4 text-on-surface-variant text-sm">{{ user.email }}</td>

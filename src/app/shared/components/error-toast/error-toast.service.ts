@@ -30,7 +30,7 @@ export class ErrorToastService {
   }
 
   /** Kullanıcıdan onaya ihtiyaç duyulduğunda çağırılır. Promise<boolean> döner. */
-  confirm(message: string, detail?: string, confirmLabel = 'Sil'): Promise<boolean> {
+  confirm(message: string, detail?: string, confirmLabel?: string): Promise<boolean> {
     return new Promise(resolve => {
       this.confirmDialog.set({ message, detail, confirmLabel, resolve });
     });

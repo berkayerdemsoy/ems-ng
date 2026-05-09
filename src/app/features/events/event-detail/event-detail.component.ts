@@ -25,7 +25,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
         @let e = event()!;
 
         <!-- Hero Section (event-detail.html style) -->
-        <section class="relative w-full min-h-[500px] flex items-end pb-[max(40px,5vw)] px-[max(40px,5vw)]">
+        <section class="relative w-full min-h-[280px] sm:min-h-[380px] lg:min-h-[500px] flex items-end pt-8 pb-10 lg:pb-16 px-4 sm:px-6 lg:px-10 2xl:px-16">
           <div class="absolute inset-0 bg-gradient-to-tr from-surface-container to-surface pointer-events-none -z-10"></div>
           <div class="absolute top-1/4 right-1/4 w-[40vw] h-[40vw] bg-secondary-container/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
 
@@ -39,7 +39,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                 {{ statusLabel(e.status) }}
               </span>
             </div>
-            <h1 class="text-[84px] leading-[1.1] tracking-[-0.04em] font-light text-on-background max-w-4xl">{{ e.title }}</h1>
+            <h1 class="text-[clamp(28px,6.5vw,84px)] leading-[1.1] tracking-[-0.04em] font-light text-on-background max-w-4xl">{{ e.title }}</h1>
             <p class="text-3xl font-light text-on-surface-variant max-w-2xl">{{ e.city }} · {{ e.address }}</p>
 
             <!-- Owner actions -->
@@ -59,7 +59,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
         </section>
 
         <!-- Bento Grid Content -->
-        <section class="max-w-7xl mx-auto px-[max(40px,5vw)] py-[8rem] w-full">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 2xl:px-16 py-[8rem] w-full">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
             <!-- Left: About + Organizer -->
@@ -169,7 +169,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
         </section>
 
         <!-- Footer nav -->
-        <div class="max-w-7xl mx-auto px-[max(40px,5vw)] pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 2xl:px-16 pb-12">
           <a routerLink="/events" class="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-secondary transition-colors">
             <span class="material-symbols-outlined" style="font-size:18px">arrow_back</span>
             {{ 'eventDetail.backToEvents' | t }}

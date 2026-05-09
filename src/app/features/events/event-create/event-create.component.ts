@@ -30,7 +30,7 @@ function eventDateValidator(group: AbstractControl): ValidationErrors | null {
   standalone: true,
   imports: [ReactiveFormsModule, TranslatePipe, CitySelectComponent, DatetimePickerComponent, CategorySelectComponent],
   template: `
-    <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
+    <div class="min-h-screen pt-28 pb-24 px-4 sm:px-6 lg:px-10 relative">
       <div class="absolute top-32 right-1/4 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
       <div class="max-w-2xl mx-auto">

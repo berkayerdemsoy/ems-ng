@@ -55,16 +55,16 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 
             <!-- Email Verification -->
             @if (!user.verified) {
-              <div class="flex items-center justify-between p-4 bg-secondary-container/10 border border-secondary-container/30 rounded-lg">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-secondary-container/10 border border-secondary-container/30 rounded-lg">
                 <div class="flex items-center gap-3">
-                  <span class="material-symbols-outlined text-secondary" style="font-size:20px">mark_email_unread</span>
+                  <span class="material-symbols-outlined text-secondary shrink-0" style="font-size:20px">mark_email_unread</span>
                   <div>
                     <p class="text-sm font-medium text-on-surface">{{ 'profile.emailNotVerified' | t }}</p>
                     <p class="text-xs text-on-surface-variant">{{ user.email }}</p>
                   </div>
                 </div>
                 <button (click)="sendVerification()" [disabled]="sendingVerification() || cooldownLeft() > 0"
-                  class="text-xs font-semibold tracking-widest uppercase text-secondary underline hover:text-on-secondary-container disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed transition-colors">
+                  class="self-start sm:self-auto shrink-0 px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   @if (sendingVerification()) {
                     {{ 'profile.sendingLink' | t }}
                   } @else if (cooldownLeft() > 0) {
@@ -78,9 +78,9 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 
             <!-- Become Owner -->
             @if (user.role === 'USER') {
-              <div class="mt-4 p-5 glass-card rounded-xl flex items-center justify-between">
+              <div class="mt-4 p-5 glass-card rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div class="flex items-center gap-3">
-                  <span class="material-symbols-outlined text-secondary" style="font-size:22px">
+                  <span class="material-symbols-outlined text-secondary shrink-0" style="font-size:22px">
                     {{ user.verified ? 'star' : 'lock' }}
                   </span>
                   <div>
@@ -92,7 +92,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
                   </div>
                 </div>
                 <button (click)="becomeOwner()" [disabled]="!user.verified || becomingOwner()"
-                  class="px-5 py-2.5 text-xs font-semibold tracking-widest uppercase rounded-full transition-all"
+                  class="self-start sm:self-auto shrink-0 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase rounded-full transition-all"
                   [class]="user.verified
                     ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)]'
                     : 'bg-surface-container text-on-surface-variant cursor-not-allowed'">

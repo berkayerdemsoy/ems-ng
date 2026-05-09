@@ -29,7 +29,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
               {{ event().category.name }}
             </span>
           </div>
-          <h2 class="text-[48px] leading-[1.2] tracking-[-0.02em] text-on-surface mb-2 text-glow group-hover:text-secondary transition-colors">{{ event().title }}</h2>
+          <h2 class="text-[clamp(22px,3.5vw,48px)] leading-[1.2] tracking-[-0.02em] text-on-surface mb-2 text-glow group-hover:text-secondary transition-colors">{{ event().title }}</h2>
           <p class="text-base text-on-surface-variant max-w-md mb-6 line-clamp-2">{{ event().description }}</p>
           <div class="flex items-center gap-6 flex-wrap">
             <div class="flex items-center gap-2 text-on-surface-variant text-sm">

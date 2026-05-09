@@ -22,19 +22,17 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
       <div class="absolute top-20 left-10 w-96 h-96 bg-secondary-container/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
       <div class="absolute bottom-40 right-20 w-80 h-80 bg-tertiary-container/30 rounded-full blur-[80px] -z-10 pointer-events-none"></div>
 
-      <div class="max-w-7xl mx-auto px-[max(40px,5vw)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 2xl:px-16">
 
         <!-- Header -->
         <header class="mb-16 pt-12">
-          <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
-            <div>
-              <h1 class="text-[84px] leading-[1.1] tracking-[-0.04em] font-light text-on-surface">
-                {{ 'eventList.title1' | t }}<br/><span class="italic text-secondary-fixed-dim">{{ 'eventList.title2' | t }}</span>
-              </h1>
-            </div>
+          <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-6 gap-4">
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl xl:text-[84px] leading-[1.1] tracking-[-0.04em] font-light text-on-surface">
+              {{ 'eventList.title1' | t }}<br/><span class="italic text-secondary-fixed-dim">{{ 'eventList.title2' | t }}</span>
+            </h1>
             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
               <a routerLink="/events/create"
-                 class="mt-8 px-8 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors self-end">
+                 class="sm:mb-2 px-8 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors shrink-0 self-start sm:self-auto">
                 {{ 'eventList.newExperience' | t }}
               </a>
             }
