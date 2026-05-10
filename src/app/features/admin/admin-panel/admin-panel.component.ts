@@ -9,6 +9,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import { ErrorToastService } from '../../../shared/components/error-toast/error-toast.service';
 import { I18nService } from '../../../core/services/i18n.service';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 import {
@@ -23,7 +24,7 @@ type AdminTab = 'categories' | 'events' | 'users';
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
-  imports: [DatePipe, RouterLink, FormsModule, TranslatePipe, PaginationComponent],
+  imports: [DatePipe, RouterLink, FormsModule, TranslatePipe, CategoryNamePipe, PaginationComponent],
   template: `
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <!-- Background blobs -->
@@ -199,8 +200,8 @@ type AdminTab = 'categories' | 'events' | 'users';
                           </td>
                           <!-- Category -->
                           <td class="px-6 py-4">
-                            <span class="inline-block px-2.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-full bg-amber-50 text-amber-700 border border-amber-200/60 whitespace-nowrap" [title]="event.category ? event.category.name : ''">
-                              {{ event.category ? event.category.name : '—' }}
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-full bg-amber-50 text-amber-700 border border-amber-200/60 whitespace-nowrap" [title]="event.category ? (event.category.name | categoryName) : ''">
+                              {{ event.category ? (event.category.name | categoryName) : '—' }}
                             </span>
                           </td>
                           <!-- City -->

@@ -163,7 +163,13 @@ export class DashboardComponent implements OnInit {
 
   readonly totalEvents = computed(() => this.myEvents().length);
   readonly totalAttendees = computed(() => this.myEvents().reduce((sum, e) => sum + e.currentAttendees, 0));
-  readonly upcomingCount = computed(() => this.myEvents().filter(e => e.status === 'UPCOMING').length);
+  readonly upcomingCount = computed(() => {
+    const now = new Date();
+    const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+    return this.myEvents().filter(e =>
+      e.status === 'UPCOMING' && new Date(e.startDate) <= twoWeeks
+    ).length;
+  });
   readonly avgFillRate = computed(() => {
     const events = this.myEvents();
     if (!events.length) return 0;

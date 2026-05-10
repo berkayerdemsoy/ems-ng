@@ -9,11 +9,12 @@ import { I18nService } from '../../../core/services/i18n.service';
 import { EventResponseDto, ErrorResponseDto } from '../../../core/models';
 import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [RouterLink, DatePipe, CurrencyPipe, DecimalPipe, AvailableSeatsPipe, TranslatePipe],
+  imports: [RouterLink, DatePipe, CurrencyPipe, DecimalPipe, AvailableSeatsPipe, TranslatePipe, CategoryNamePipe],
   template: `
     <div class="min-h-screen flex flex-col pt-20">
 
@@ -32,7 +33,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
           <div class="w-full max-w-7xl mx-auto flex flex-col gap-4">
             <div class="flex items-center gap-2 flex-wrap">
               <span class="px-4 py-1 rounded-full bg-surface-container-highest/50 backdrop-blur-md border border-white/20 text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant">
-                {{ e.category.name }}
+                {{ e.category.name | categoryName }}
               </span>
               <span [class]="statusBadge(e.status)"
                     class="px-4 py-1 rounded-full backdrop-blur-md border text-[11px] font-semibold tracking-widest uppercase">

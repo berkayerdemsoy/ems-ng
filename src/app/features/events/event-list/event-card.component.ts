@@ -5,11 +5,12 @@ import { EventResponseDto } from '../../../core/models';
 import { EventStatusPipe } from '../../../shared/pipes/event-status.pipe';
 import { AvailableSeatsPipe } from '../../../shared/pipes/available-seats.pipe';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [RouterLink, DatePipe, CurrencyPipe, EventStatusPipe, AvailableSeatsPipe, TranslatePipe],
+  imports: [RouterLink, DatePipe, CurrencyPipe, EventStatusPipe, AvailableSeatsPipe, TranslatePipe, CategoryNamePipe],
   template: `
     @if (featured()) {
       <!-- Featured / Large card -->
@@ -21,12 +22,18 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
         <div class="relative z-20 p-8">
           <div class="flex gap-3 mb-4 flex-wrap">
             @let status = event().status | eventStatus;
-            <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md glow-amber flex items-center gap-1">
-              <span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span>
-              {{ status.label }}
-            </span>
+            @if (isComingSoon()) {
+              <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md glow-amber flex items-center gap-1">
+                <span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span>
+                {{ status.label }}
+              </span>
+            } @else if (event().status !== 'UPCOMING') {
+              <span class="px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md border border-white/30 flex items-center gap-1" [class]="status.classes">
+                {{ status.label }}
+              </span>
+            }
             <span class="bg-surface-container-lowest/50 text-on-surface px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md border border-white/50">
-              {{ event().category.name }}
+              {{ event().category.name | categoryName }}
             </span>
           </div>
           <h2 class="text-[clamp(22px,3.5vw,48px)] leading-[1.2] tracking-[-0.02em] text-on-surface mb-2 text-glow group-hover:text-secondary transition-colors">{{ event().title }}</h2>
@@ -59,9 +66,19 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
         <div class="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10"></div>
         <div class="relative z-20 p-6">
           @let status = event().status | eventStatus;
-          <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-block mb-3 glow-amber">
-            {{ status.label }}
-          </span>
+          @if (isComingSoon()) {
+            <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-flex items-center gap-1 mb-3 glow-amber">
+              <span class="material-symbols-outlined" style="font-size:12px">local_fire_department</span>
+              {{ status.label }}
+            </span>
+          } @else if (event().status !== 'UPCOMING') {
+            <span class="px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-block mb-3" [class]="status.classes">
+              {{ status.label }}
+            </span>
+          } @else {
+            <!-- UPCOMING ama 2 haftadan uzak — boşluk yerine koy -->
+            <span class="inline-block mb-3 h-[26px]"></span>
+          }
           <h3 class="text-2xl font-medium text-on-surface mb-2 group-hover:text-secondary transition-colors line-clamp-2">{{ event().title }}</h3>
           <p class="text-sm text-on-surface-variant mb-4 line-clamp-2">{{ event().description }}</p>
           <div class="flex justify-between items-center mt-4 pt-4 border-t border-outline-variant/30">
@@ -89,4 +106,12 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 export class EventCardComponent {
   readonly event = input.required<EventResponseDto>();
   readonly featured = input(false);
+
+  /** Etkinlik bugünden itibaren 2 hafta (14 gün) içinde mi başlıyor? */
+  readonly isComingSoon = computed(() => {
+    if (this.event().status !== 'UPCOMING') return false;
+    const now = new Date();
+    const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+    return new Date(this.event().startDate) <= twoWeeks;
+  });
 }
