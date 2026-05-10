@@ -1,85 +1,24 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { I18nService } from '../../core/services/i18n.service';
-import { EventResponseDto, Page } from '../../core/models';
+import { EventResponseDto } from '../../core/models';
 import { EventStatusPipe } from '../../shared/pipes/event-status.pipe';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, DatePipe, DecimalPipe, EventStatusPipe, TranslatePipe],
+  imports: [RouterLink, DatePipe, DecimalPipe, EventStatusPipe, TranslatePipe],
   template: `
-    <div class="min-h-screen flex pt-20 bg-background">
+    <div class="min-h-screen pt-20 pb-24 bg-background relative">
       <!-- Light Leaks -->
       <div class="light-leak w-[300px] h-[300px] top-[-100px] right-[10%] bg-[rgba(254,170,0,0.15)]"></div>
       <div class="light-leak w-[300px] h-[300px] bottom-[20%] left-[20%] bg-[rgba(254,170,0,0.08)]"></div>
 
-      <!-- Sidebar -->
-      <aside class="h-[calc(100vh-80px)] w-64 fixed left-0 top-20 bg-[#F4F2EE]/60 backdrop-blur-lg border-r border-neutral-200 flex flex-col py-8 px-4 space-y-4 z-40 hidden md:flex">
-        <div class="flex items-center space-x-3 mb-8 px-4">
-          <div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center border border-secondary-container/40 text-sm font-bold text-secondary">
-            {{ initials() }}
-          </div>
-          <div>
-            <h2 class="font-semibold text-on-surface text-sm">{{ auth.currentUser()?.firstName }} {{ auth.currentUser()?.lastName }}</h2>
-            <p class="text-xs text-on-surface-variant">{{ auth.currentUser()?.role }}</p>
-          </div>
-        </div>
-
-        <nav class="flex-1 flex flex-col space-y-2">
-          <a routerLink="/dashboard" [routerLinkActiveOptions]="{exact:true}"
-             routerLinkActive="text-amber-600 bg-white/50 border-l-2 border-amber-500"
-             class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-neutral-100/50 hover:translate-x-1 transition-all text-sm uppercase tracking-widest">
-            <span class="material-symbols-outlined" style="font-size:20px">dashboard</span>
-            <span>{{ 'dashboard.overviewNav' | t }}</span>
-          </a>
-          <a routerLink="/events"
-             class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-neutral-100/50 hover:translate-x-1 transition-all text-sm uppercase tracking-widest">
-            <span class="material-symbols-outlined" style="font-size:20px">theater_comedy</span>
-            <span>{{ 'dashboard.allEventsNav' | t }}</span>
-          </a>
-          <a routerLink="/my-participations"
-             class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-neutral-100/50 hover:translate-x-1 transition-all text-sm uppercase tracking-widest">
-            <span class="material-symbols-outlined" style="font-size:20px">local_activity</span>
-            <span>{{ 'dashboard.myTicketsNav' | t }}</span>
-          </a>
-          @if (auth.role() === 'ADMIN') {
-            <a routerLink="/admin/users"
-               routerLinkActive="text-amber-600 bg-white/50"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-neutral-100/50 hover:translate-x-1 transition-all text-sm uppercase tracking-widest">
-              <span class="material-symbols-outlined" style="font-size:20px">manage_accounts</span>
-              <span>{{ 'dashboard.usersNav' | t }}</span>
-            </a>
-            <a routerLink="/admin/categories"
-               routerLinkActive="text-amber-600 bg-white/50"
-               class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-neutral-100/50 hover:translate-x-1 transition-all text-sm uppercase tracking-widest">
-              <span class="material-symbols-outlined" style="font-size:20px">layers</span>
-              <span>{{ 'dashboard.categoriesNav' | t }}</span>
-            </a>
-          }
-          <a routerLink="/profile"
-             routerLinkActive="text-amber-600 bg-white/50"
-             class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-neutral-100/50 hover:translate-x-1 transition-all text-sm uppercase tracking-widest">
-            <span class="material-symbols-outlined" style="font-size:20px">settings</span>
-            <span>{{ 'dashboard.settingsNav' | t }}</span>
-          </a>
-        </nav>
-
-        <div class="mt-auto px-2">
-          <a routerLink="/events/create"
-             class="w-full py-3 px-4 rounded-lg bg-amber-500 text-white text-sm uppercase tracking-widest shadow-sm hover:bg-amber-600 transition-colors flex items-center justify-center space-x-2">
-            <span class="material-symbols-outlined" style="font-size:18px">add</span>
-            <span>{{ 'dashboard.createEventBtn' | t }}</span>
-          </a>
-        </div>
-      </aside>
-
-      <!-- Main Canvas -->
-      <main class="flex-1 md:ml-64 p-[max(40px,5vw)] flex flex-col gap-[4rem] min-h-screen relative">
+      <main class="max-w-7xl mx-auto px-[max(24px,5vw)] flex flex-col gap-[4rem] pt-10">
         <!-- Header -->
         <header class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-surface-variant pb-8">
           <div>
@@ -188,7 +127,7 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
                     <div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-variant/50">
                       <div class="flex space-x-4">
                         <div class="text-center">
-                        <p class="text-[10px] text-outline uppercase tracking-widest">{{ 'dashboard.attendees' | t }}</p>
+                          <p class="text-[10px] text-outline uppercase tracking-widest">{{ 'dashboard.attendees' | t }}</p>
                           <p class="text-sm text-on-surface">{{ event.currentAttendees }} / {{ event.capacity }}</p>
                         </div>
                         <div class="text-center">
@@ -245,10 +184,5 @@ export class DashboardComponent implements OnInit {
       error: () => this.isLoading.set(false)
     });
   }
-
-  initials(): string {
-    const u = this.auth.currentUser();
-    if (!u) return '?';
-    return (u.firstName[0] + u.lastName[0]).toUpperCase();
-  }
 }
+

@@ -35,7 +35,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
                  class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.dashboard' | t }}</a>
             }
             @if (auth.role() === 'ADMIN') {
-              <a routerLink="/admin/users"
+              <a routerLink="/admin"
                  routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
                  class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.admin' | t }}</a>
             }
@@ -145,7 +145,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               </a>
             }
             @if (auth.role() === 'ADMIN') {
-              <a routerLink="/admin/users" (click)="closeMenu()"
+              <a routerLink="/admin" (click)="closeMenu()"
                  routerLinkActive="text-amber-600 font-medium"
                  class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
                 <span class="material-symbols-outlined" style="font-size:20px">manage_accounts</span>

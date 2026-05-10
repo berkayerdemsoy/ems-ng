@@ -39,19 +39,19 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
             <div class="space-y-4">
               @for (p of participations(); track p.id) {
                 <div class="bg-surface-container-lowest/80 backdrop-blur-xl rounded-xl p-5 border border-outline-variant/30 shadow-[0_8px_24px_rgba(28,28,23,0.03)] flex flex-col gap-4 hover:border-secondary-container/40 transition-colors group sm:flex-row sm:items-center sm:justify-between">
-                  <!-- Icon + Info -->
-                  <div class="flex items-start gap-4 min-w-0">
+                  <!-- Icon + Info (tıklanabilir) -->
+                  <a [routerLink]="['/events', p.eventId]" class="flex items-start gap-4 min-w-0 flex-1 cursor-pointer">
                     <div class="w-11 h-11 rounded-lg bg-secondary-container/20 flex items-center justify-center border border-secondary-container/30 shrink-0 group-hover:bg-secondary-container/30 transition-colors">
                       <span class="material-symbols-outlined text-secondary" style="font-size:20px">local_activity</span>
                     </div>
                     <div class="min-w-0">
-                      <p class="text-base font-medium text-on-surface leading-snug mb-1">{{ p.eventTitle }}</p>
+                      <p class="text-base font-medium text-on-surface leading-snug mb-1 group-hover:text-secondary transition-colors">{{ p.eventTitle }}</p>
                       <div class="flex items-center gap-1.5 text-sm text-on-surface-variant">
                         <span class="material-symbols-outlined" style="font-size:13px">calendar_today</span>
                         <span>{{ 'participations.registeredAt' | t }} {{ p.registeredAt | date:'dd MMM yyyy' }}</span>
                       </div>
                     </div>
-                  </div>
+                  </a>
                   <!-- VIEW butonu — mobilde sağ-alta, sm+ sağ-ortada -->
                   <a [routerLink]="['/events', p.eventId]"
                      class="self-end sm:self-auto shrink-0 glass-panel border border-outline-variant/30 px-5 py-2 rounded-full text-[11px] font-semibold tracking-widest text-on-surface uppercase hover:bg-white/50 transition-colors flex items-center gap-2">

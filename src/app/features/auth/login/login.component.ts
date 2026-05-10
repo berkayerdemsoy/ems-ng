@@ -38,11 +38,17 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
             <div>
               <label class="block text-[11px] font-semibold tracking-widest uppercase text-on-surface-variant mb-2">{{ 'login.passwordLabel' | t }}</label>
-              <input formControlName="password" type="password"
-                     class="w-full px-4 py-3 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
-                     [class.border-error]="isInvalid('password')"
-                     [class.border-outline-variant]="!isInvalid('password')"
-                     placeholder="••••••••" />
+              <div class="relative">
+                <input formControlName="password" [type]="showPassword() ? 'text' : 'password'"
+                       class="w-full px-4 py-3 pr-12 bg-surface border rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
+                       [class.border-error]="isInvalid('password')"
+                       [class.border-outline-variant]="!isInvalid('password')"
+                       placeholder="••••••••" />
+                <button type="button" (click)="showPassword.set(!showPassword())"
+                  class="absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant hover:text-on-surface transition-colors">
+                  <span class="material-symbols-outlined" style="font-size:20px">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
               @if (isInvalid('password')) {
                 <p class="mt-1 text-xs text-error">{{ 'login.passwordRequired' | t }}</p>
               }
@@ -80,6 +86,7 @@ export class LoginComponent {
 
   readonly isLoading = signal(false);
   readonly formError = signal<string | null>(null);
+  readonly showPassword = signal(false);
 
   readonly form = this.fb.group({
     username: ['', Validators.required],
