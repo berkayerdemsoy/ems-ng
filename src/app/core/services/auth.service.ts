@@ -49,9 +49,9 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+  logout(returnUrl?: string): void {
     this.clearSession();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], returnUrl ? { queryParams: { returnUrl } } : {});
   }
 
   refreshUser(id: number): void {

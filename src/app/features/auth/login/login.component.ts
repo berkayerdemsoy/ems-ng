@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ErrorResponseDto } from '../../../core/models';
@@ -82,6 +82,7 @@ export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly i18n = inject(I18nService);
 
   readonly isLoading = signal(false);
@@ -103,7 +104,10 @@ export class LoginComponent {
     this.formError.set(null);
     this.isLoading.set(true);
     this.auth.login(this.form.getRawValue() as any).subscribe({
-      next: () => this.router.navigate(['/events']),
+      next: () => {
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/events';
+        this.router.navigateByUrl(returnUrl);
+      },
       error: (err: ErrorResponseDto) => {
         this.isLoading.set(false);
         this.formError.set(err?.errorCode === 'INVALID_CREDENTIALS'
