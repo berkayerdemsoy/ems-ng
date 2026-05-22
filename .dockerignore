@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.git/
+.github/
+.angular/
+coverage/
+*.md
+*.log
+.env
+.env.*
+.editorconfig
+.prettierrc*
+.eslintrc*
+
