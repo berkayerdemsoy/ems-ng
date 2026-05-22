@@ -239,7 +239,7 @@ export class EventCreateComponent implements OnInit {
     address:     ['', Validators.required],
     categoryId:  ['', Validators.required],
     capacity:    [null as number | null, [Validators.required, Validators.min(1)]],
-    price:       [0, [Validators.required, Validators.min(0), Validators.max(30000)]],
+    price:       [0, [Validators.required, Validators.min(0), Validators.max(999999)]],
     startDate:   ['', Validators.required],
     endDate:     ['', Validators.required],
   }, { validators: eventDateValidator });
