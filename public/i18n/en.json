@@ -142,6 +142,7 @@
   "eventCreate.endRequired": "End date is required.",
   "eventCreate.pastStartDate": "Start date cannot be in the past.",
   "eventCreate.endBeforeStart": "End date must be after start date.",
+  "eventCreate.priceMax": "Price can be max 6 characters",
 
   "eventEdit.badge": "Edit Experience",
   "eventEdit.title": "Edit Event",

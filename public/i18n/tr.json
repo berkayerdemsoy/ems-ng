@@ -142,6 +142,7 @@
   "eventCreate.endRequired": "Bitiş tarihi zorunludur.",
   "eventCreate.pastStartDate": "Başlangıç tarihi geçmiş olamaz.",
   "eventCreate.endBeforeStart": "Bitiş tarihi başlangıçtan sonra olmalıdır.",
+  "eventCreate.priceMax": "Fiyat maksimum 6 haneli olabilir.",
 
   "eventEdit.badge": "Etkinliği Düzenle",
   "eventEdit.title": "Etkinliği Düzenle",
