@@ -49,6 +49,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           toast.show('Bu işlemi yapmaya yetkiniz yok.', 'error');
         } else if (err.status === 404) {
           toast.show('Kaynak bulunamadı.', 'error');
+        }else if (err.status === 401) {
+          toast.show("Oturumunuz geçersiz veya süresi dolmuş. Lütfen tekrar giriş yapın.", 'error');
+          auth.logout();
         } else if (err.status === 500) {
           toast.show('Bir sunucu hatası oluştu.', 'error');
         }
