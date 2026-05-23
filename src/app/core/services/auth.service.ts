@@ -19,6 +19,26 @@ export class AuthService {
   readonly isVerified = computed(() => this.currentUser()?.verified ?? false);
   readonly role = computed(() => this.currentUser()?.role ?? null);
 
+  constructor() {
+    // Sekmeler arası (Cross-tab) oturum senkronizasyonu
+    window.addEventListener('storage', (event) => {
+      // Sadece token değiştiğinde tetiklensin
+      if (event.key === 'token') {
+        if (event.newValue) {
+          // Durum 1: Başka bir sekmede yeni giriş yapıldı veya mail doğrulanıp yeni token alındı.
+          // Mevcut initFromStorage metodunuzu çağırarak yeni tokenı okuyup kullanıcıyı güncelliyoruz.
+          this.initFromStorage();
+        } else {
+          // Durum 2: Başka bir sekmede çıkış yapıldı (token silindi).
+          // LocalStorage zaten diğer sekmeden silindiği için sadece Signal'i temizleyip Login'e atıyoruz.
+          this.currentUserSignal.set(null);
+          sessionStorage.removeItem('verificationSent');
+          this.router.navigate(['/login']);
+        }
+      }
+    });
+  }
+
   initFromStorage(): Promise<void> {
     const token = localStorage.getItem('token');
     if (!token) return Promise.resolve();
