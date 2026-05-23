@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { UserCreateDto, UserUpdateDto, UserResponseDto, ChangePasswordDto } from '../models';
+import { UserCreateDto, UserUpdateDto, UserResponseDto, ChangePasswordDto, AuthResponseDto } from '../models';
 import { Page } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -30,12 +30,9 @@ export class UserService {
     return this.http.post<string>(`${this.base}/verify-email/${id}`, null);
   }
 
-  confirmEmail(token: string): Observable<string> {
+  confirmEmail(token: string): Observable<AuthResponseDto> {
     const params = new HttpParams().set('token', token);
-    // responseType: 'text' prevents Angular from trying to JSON-parse a plain-text
-    // success response — without it a 200 OK with a plain-text body triggers the
-    // error handler (JSON SyntaxError) even though the DB was updated successfully.
-    return this.http.get(`${this.base}/confirm-email`, { params, responseType: 'text' });
+    return this.http.get<AuthResponseDto>(`${this.base}/confirm-email`, { params });
   }
 
   becomeOwner(id: number): Observable<void> {

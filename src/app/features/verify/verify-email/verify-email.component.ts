@@ -167,10 +167,10 @@ export class VerifyEmailComponent implements OnInit {
       return;
     }
     this.userService.confirmEmail(token).subscribe({
-      next: () => {
+      next: (response) => {
+        this.auth.saveToken(response.token);
+        this.auth.saveUser(response.user);
         this.state.set('success');
-        const userId = this.auth.currentUser()?.id;
-        if (userId) this.auth.refreshUser(userId);
       },
       error: (err: any) => {
         if (err?.errorCode === 'FORBIDDEN') {

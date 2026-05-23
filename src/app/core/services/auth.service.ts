@@ -80,6 +80,14 @@ export class AuthService {
     );
   }
 
+  saveToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  saveUser(user: UserResponseDto): void {
+    this.currentUserSignal.set(user);
+  }
+
   private clearSession(): void {
     localStorage.removeItem('token');
     sessionStorage.removeItem('verificationSent');
