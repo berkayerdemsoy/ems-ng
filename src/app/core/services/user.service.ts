@@ -35,8 +35,8 @@ export class UserService {
     return this.http.get<AuthResponseDto>(`${this.base}/confirm-email`, { params });
   }
 
-  becomeOwner(id: number): Observable<void> {
-    return this.http.post<void>(`${this.base}/owner/${id}`, null);
+  becomeOwner(id: number): Observable<AuthResponseDto> {
+    return this.http.post<AuthResponseDto>(`${this.base}/owner/${id}`, null);
   }
 
   changePassword(dto: ChangePasswordDto): Observable<void> {

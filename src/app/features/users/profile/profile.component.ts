@@ -428,9 +428,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const id = this.auth.currentUser()?.id;
     if (!id) return;
     this.becomingOwner.set(true);
+    
     this.userService.becomeOwner(id).subscribe({
-      next: () => {
-        this.auth.refreshUser(id);
+      next: (response) => { 
+        this.auth.saveToken(response.token);
+        this.auth.saveUser(response.user); 
+        
         this.becomingOwner.set(false);
         this.toast.show('Artık bir Event Owner\'sınız!', 'success');
       },
