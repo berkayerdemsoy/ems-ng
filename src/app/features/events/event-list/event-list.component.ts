@@ -150,10 +150,26 @@ export class EventListComponent implements OnInit {
   readonly filteredEvents = computed(() => {
     const page = this.eventsPage();
     if (!page) return null;
-    if (!this.upcomingOnly()) return page;
+    
+    let events = page.content;
+    
+    if (this.upcomingOnly()) {
+      const now = new Date();
+      events = events.filter(e => new Date(e.endDate) >= now);
+    }
+    
     const now = new Date();
-    const filtered = page.content.filter(e => new Date(e.endDate) >= now);
-    return { ...page, content: filtered, totalElements: filtered.length };
+    const upcoming = events
+      .filter(e => new Date(e.endDate) >= now)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    
+    const expired = events
+      .filter(e => new Date(e.endDate) < now)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    
+    const sorted = [...upcoming, ...expired];
+    
+    return { ...page, content: sorted, totalElements: sorted.length };
   });
 
   cityInput = '';
