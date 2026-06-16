@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorToastService } from '../../shared/components/error-toast/error-toast.service';
 import { ErrorResponseDto, JwtPayload } from '../models';
 
-const PUBLIC_URLS = ['/users/create', '/users/login', '/users/confirm-email'];
+const PUBLIC_URLS = ['/users/create', '/users/login', '/users/confirm-email', '/events', '/categories'];
 
 /** URLs whose errors are handled by the component — suppress global toasts. */
 const SILENT_ERROR_URLS = ['/users/confirm-email', '/users/login', '/users/create'];

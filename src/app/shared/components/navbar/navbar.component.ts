@@ -92,6 +92,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
                   ? 'bg-amber-400 text-white shadow-sm'
                   : 'text-on-surface-variant hover:text-amber-600'">EN</button>
             </div>
+            <a routerLink="/events"
+               routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
+               class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
             <a routerLink="/login" class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.signIn' | t }}</a>
             <a routerLink="/register"
                class="px-6 py-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
@@ -171,6 +174,12 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               {{ 'nav.logout' | t }}
             </button>
           } @else {
+            <a routerLink="/events" (click)="closeMenu()"
+               routerLinkActive="text-amber-600 font-medium"
+               class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
+              <span class="material-symbols-outlined" style="font-size:20px">explore</span>
+              {{ 'nav.discover' | t }}
+            </a>
             <a routerLink="/login" (click)="closeMenu()"
                class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
               <span class="material-symbols-outlined" style="font-size:20px">login</span>
