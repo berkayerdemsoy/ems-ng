@@ -23,6 +23,7 @@
   "common.back": "Back",
 
   "guard.noAccess": "You don't have permission to access this page.",
+  "guard.loginRequired": "You need to sign in to access this page.",
 
   "confirm.title": "Are you sure?",
   "confirm.cancel": "Cancel",

@@ -23,6 +23,7 @@
   "common.back": "Geri",
 
   "guard.noAccess": "Bu sayfaya erişim yetkiniz yok.",
+  "guard.loginRequired": "Bu işlem için giriş yapmanız gerekiyor.",
 
   "confirm.title": "Emin misiniz?",
   "confirm.cancel": "İptal",
