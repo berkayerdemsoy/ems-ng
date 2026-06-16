@@ -81,8 +81,10 @@
   "eventList.emptySubtitle": "Farklı filtreler deneyin veya tüm etkinlikleri keşfedin.",
   "eventList.loadMore": "Daha Fazla Etkinlik",
   "eventList.totalFound": "etkinlik bulundu",
+  "eventList.upcomingOnly": "Sadece yaklaşan etkinlikler",
 
   "eventCard.viewDetails": "İncele",
+  "eventCard.ended": "Bitti",
 
   "eventDetail.about": "Etkinlik Hakkında",
   "eventDetail.organizer": "Organizatör",

@@ -81,8 +81,10 @@
   "eventList.emptySubtitle": "Try different filters or explore all events.",
   "eventList.loadMore": "Load More Experiences",
   "eventList.totalFound": "experiences found",
+  "eventList.upcomingOnly": "Upcoming events only",
 
   "eventCard.viewDetails": "View Details",
+  "eventCard.ended": "Ended",
 
   "eventDetail.about": "About the Event",
   "eventDetail.organizer": "Organized By",

@@ -22,7 +22,12 @@ import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
         <div class="relative z-20 p-8">
           <div class="flex gap-3 mb-4 flex-wrap">
             @let status = event().status | eventStatus;
-            @if (isComingSoon()) {
+            @if (isExpired()) {
+              <span class="bg-gray-200/80 text-gray-700 border border-gray-300/50 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md flex items-center gap-1">
+                <span class="material-symbols-outlined" style="font-size:14px">event_busy</span>
+                {{ 'eventCard.ended' | t }}
+              </span>
+            } @else if (isComingSoon()) {
               <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md glow-amber flex items-center gap-1">
                 <span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span>
                 {{ status.label }}
@@ -66,7 +71,12 @@ import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
         <div class="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10"></div>
         <div class="relative z-20 p-6">
           @let status = event().status | eventStatus;
-          @if (isComingSoon()) {
+          @if (isExpired()) {
+            <span class="bg-gray-200/80 text-gray-700 border border-gray-300/50 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-flex items-center gap-1 mb-3">
+              <span class="material-symbols-outlined" style="font-size:12px">event_busy</span>
+              {{ 'eventCard.ended' | t }}
+            </span>
+          } @else if (isComingSoon()) {
             <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-flex items-center gap-1 mb-3 glow-amber">
               <span class="material-symbols-outlined" style="font-size:12px">local_fire_department</span>
               {{ status.label }}
@@ -107,8 +117,13 @@ export class EventCardComponent {
   readonly event = input.required<EventResponseDto>();
   readonly featured = input(false);
 
-  /** Etkinlik bugünden itibaren 2 hafta (14 gün) içinde mi başlıyor? */
+  readonly isExpired = computed(() => {
+    const now = new Date();
+    return new Date(this.event().endDate) < now;
+  });
+
   readonly isComingSoon = computed(() => {
+    if (this.isExpired()) return false;
     if (this.event().status !== 'UPCOMING') return false;
     const now = new Date();
     const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);

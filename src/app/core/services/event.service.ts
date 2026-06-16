@@ -11,7 +11,10 @@ export class EventService {
   private readonly base = `${environment.apiBaseUrl}/events`;
 
   getAll(page = 0, size = 20): Observable<Page<EventResponseDto>> {
-    const params = new HttpParams().set('page', page).set('size', size);
+    const params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', 'createdAt,asc');
     return this.http.get<Page<EventResponseDto>>(this.base, { params });
   }
 
@@ -32,12 +35,18 @@ export class EventService {
   }
 
   getByCategory(categoryId: number, page = 0, size = 20): Observable<Page<EventResponseDto>> {
-    const params = new HttpParams().set('page', page).set('size', size);
+    const params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', 'createdAt,asc');
     return this.http.get<Page<EventResponseDto>>(`${this.base}/category/${categoryId}`, { params });
   }
 
   getByCity(city: string, page = 0, size = 20): Observable<Page<EventResponseDto>> {
-    const params = new HttpParams().set('page', page).set('size', size);
+    const params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', 'createdAt,asc');
     return this.http.get<Page<EventResponseDto>>(`${this.base}/city/${city}`, { params });
   }
 
@@ -46,7 +55,8 @@ export class EventService {
       .set('start', start)
       .set('end', end)
       .set('page', page)
-      .set('size', size);
+      .set('size', size)
+      .set('sort', 'createdAt,asc');
     return this.http.get<Page<EventResponseDto>>(`${this.base}/date-range`, { params });
   }
 }

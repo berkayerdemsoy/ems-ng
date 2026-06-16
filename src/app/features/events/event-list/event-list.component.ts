@@ -69,6 +69,17 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
               @if (hasFilter()) { {{ 'eventList.clearFilter' | t }} } @else { {{ 'eventList.discover' | t }} }
             </button>
           </div>
+
+          <!-- Upcoming Only Toggle -->
+          <div class="mt-4 flex items-center gap-3">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox"
+                     [ngModel]="upcomingOnly()"
+                     (ngModelChange)="onUpcomingToggle($event)"
+                     class="w-4 h-4 rounded border-outline-variant text-secondary focus:ring-secondary-container/50 cursor-pointer" />
+              <span class="text-sm text-on-surface-variant">{{ 'eventList.upcomingOnly' | t }}</span>
+            </label>
+          </div>
         </header>
 
         <!-- Skeleton Loader -->
@@ -80,7 +91,7 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
             <div class="md:col-span-4 glass-card rounded-xl h-64 animate-pulse"></div>
             <div class="md:col-span-4 glass-card rounded-xl h-64 animate-pulse"></div>
           </div>
-        } @else if (eventsPage()?.empty) {
+        } @else if (filteredEvents()?.empty || filteredEvents()?.content?.length === 0) {
           <div class="text-center py-24">
             <p class="text-6xl mb-6">✦</p>
             <p class="text-2xl font-light text-on-surface-variant">{{ 'eventList.emptyTitle' | t }}</p>
@@ -89,7 +100,7 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
         } @else {
             <!-- Bento Grid -->
             <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
-              @let events = eventsPage()!.content;
+              @let events = filteredEvents()!.content;
               @for (event of events; track event.id; let i = $index) {
                 <app-event-card
                   [event]="event"
@@ -99,7 +110,7 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
             </section>
 
           <!-- Load More / Pagination -->
-          @if (!eventsPage()!.last) {
+          @if (!filteredEvents()!.last) {
             <div class="mt-16 text-center">
               <button (click)="onPageChange(currentPage() + 1)"
                       class="glass-card border border-amber-500/30 px-8 py-3 rounded-full text-xs font-semibold tracking-widest text-secondary-container uppercase hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
@@ -111,9 +122,9 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
         }
 
         <!-- Results count -->
-        @if (eventsPage() && !isLoading()) {
+        @if (filteredEvents() && !isLoading()) {
           <p class="text-sm text-on-surface-variant/60 mt-6 text-center">
-            {{ eventsPage()!.totalElements }} {{ 'eventList.totalFound' | t }}
+            {{ filteredEvents()!.totalElements }} {{ 'eventList.totalFound' | t }}
           </p>
         }
       </div>
@@ -132,8 +143,18 @@ export class EventListComponent implements OnInit {
   readonly cityFilter = signal('');
   readonly categoryFilter = signal<number | null>(null);
   readonly startDate = signal('');
+  readonly upcomingOnly = signal(false);
 
-  readonly hasFilter = computed(() => !!this.cityFilter() || !!this.categoryFilter() || !!this.startDate());
+  readonly hasFilter = computed(() => !!this.cityFilter() || !!this.categoryFilter() || !!this.startDate() || this.upcomingOnly());
+
+  readonly filteredEvents = computed(() => {
+    const page = this.eventsPage();
+    if (!page) return null;
+    if (!this.upcomingOnly()) return page;
+    const now = new Date();
+    const filtered = page.content.filter(e => new Date(e.endDate) >= now);
+    return { ...page, content: filtered, totalElements: filtered.length };
+  });
 
   cityInput = '';
   selectedCategoryId: number | null = null;
@@ -173,7 +194,7 @@ export class EventListComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.cityFilter.set(''); this.categoryFilter.set(null); this.startDate.set('');
+    this.cityFilter.set(''); this.categoryFilter.set(null); this.startDate.set(''); this.upcomingOnly.set(false);
     this.cityInput = ''; this.selectedCategoryId = null; this.startDateInput = null;
     this.currentPage.set(0);
   }
@@ -181,5 +202,6 @@ export class EventListComponent implements OnInit {
   onCityChange(val: string): void     { this.cityFilter.set(val);  this.currentPage.set(0); }
   onCategoryChange(val: number | null): void { this.categoryFilter.set(val); this.currentPage.set(0); }
   onDateChange(): void  { this.startDate.set(this.startDateInput ?? ''); this.currentPage.set(0); }
+  onUpcomingToggle(val: boolean): void { this.upcomingOnly.set(val); }
   onPageChange(page: number): void    { this.currentPage.set(page); }
 }
