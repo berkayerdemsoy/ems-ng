@@ -85,6 +85,7 @@
 
   "eventCard.viewDetails": "View Details",
   "eventCard.ended": "Ended",
+  "eventCard.ongoing": "Active",
 
   "eventDetail.about": "About the Event",
   "eventDetail.organizer": "Organized By",
