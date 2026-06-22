@@ -27,6 +27,11 @@ import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
                 <span class="material-symbols-outlined" style="font-size:14px">event_busy</span>
                 {{ 'eventCard.ended' | t }}
               </span>
+            } @else if (isOngoing()) {
+              <span class="bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md flex items-center gap-1">
+                <span class="material-symbols-outlined" style="font-size:14px">play_circle</span>
+                {{ 'eventCard.ongoing' | t }}
+              </span>
             } @else if (isComingSoon()) {
               <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[11px] font-semibold tracking-widest uppercase backdrop-blur-md glow-amber flex items-center gap-1">
                 <span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span>
@@ -76,6 +81,11 @@ import { CategoryNamePipe } from '../../../shared/pipes/category-name.pipe';
               <span class="material-symbols-outlined" style="font-size:12px">event_busy</span>
               {{ 'eventCard.ended' | t }}
             </span>
+          } @else if (isOngoing()) {
+            <span class="bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-flex items-center gap-1 mb-3">
+              <span class="material-symbols-outlined" style="font-size:12px">play_circle</span>
+              {{ 'eventCard.ongoing' | t }}
+            </span>
           } @else if (isComingSoon()) {
             <span class="bg-secondary-container/20 text-secondary border border-secondary-container/30 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase backdrop-blur-md inline-flex items-center gap-1 mb-3 glow-amber">
               <span class="material-symbols-outlined" style="font-size:12px">local_fire_department</span>
@@ -122,8 +132,16 @@ export class EventCardComponent {
     return new Date(this.event().endDate) < now;
   });
 
+  readonly isOngoing = computed(() => {
+    const now = new Date();
+    const start = new Date(this.event().startDate);
+    const end = new Date(this.event().endDate);
+    return start <= now && end >= now;
+  });
+
   readonly isComingSoon = computed(() => {
     if (this.isExpired()) return false;
+    if (this.isOngoing()) return false;
     if (this.event().status !== 'UPCOMING') return false;
     const now = new Date();
     const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
