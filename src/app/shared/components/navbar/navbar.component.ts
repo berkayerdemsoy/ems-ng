@@ -25,24 +25,24 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           <div class="hidden md:flex items-center space-x-8">
             <a routerLink="/events"
                routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-               class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
+               class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
             <a routerLink="/my-participations"
                routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-               class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.myTickets' | t }}</a>
+               class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.myTickets' | t }}</a>
             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
               <a routerLink="/dashboard"
                  routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-                 class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.dashboard' | t }}</a>
+                 class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.dashboard' | t }}</a>
             }
             @if (auth.role() === 'ADMIN') {
               <a routerLink="/admin"
                  routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-                 class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.admin' | t }}</a>
+                 class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.admin' | t }}</a>
             }
           </div>
 
           <!-- Desktop right controls -->
-          <div class="hidden md:flex items-center gap-4">
+          <div class="hidden md:flex items-center gap-6">
             <!-- TR / EN switcher -->
             <div class="flex items-center gap-1 px-2 py-1 rounded-full glass-panel border border-outline-variant/20 select-none">
               <button (click)="i18n.setLocale('tr')"
@@ -78,7 +78,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 
         } @else {
           <!-- Desktop auth buttons -->
-          <div class="hidden md:flex items-center gap-4">
+          <div class="hidden md:flex items-center gap-6">
             <!-- TR / EN switcher (logged out) -->
             <div class="flex items-center gap-1 px-2 py-1 rounded-full glass-panel border border-outline-variant/20 select-none">
               <button (click)="i18n.setLocale('tr')"
@@ -93,11 +93,11 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
                   : 'text-on-surface-variant hover:text-amber-600'">EN</button>
             </div>
             <a routerLink="/events"
-               routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-               class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
-            <a routerLink="/login" class="text-neutral-600 hover:text-amber-500 transition-all duration-300">{{ 'nav.signIn' | t }}</a>
+               routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-2"
+               class="py-2 text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
+            <a routerLink="/login" class="py-2 text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.signIn' | t }}</a>
             <a routerLink="/register"
-               class="px-6 py-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
+               class="px-6 py-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
               {{ 'nav.getStarted' | t }}
             </a>
           </div>
@@ -186,7 +186,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               {{ 'nav.signIn' | t }}
             </a>
             <a routerLink="/register" (click)="closeMenu()"
-               class="mx-3 mt-1 px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-white text-xs font-semibold tracking-widest uppercase text-center hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
+               class="mx-3 mt-1 px-6 py-3 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-white text-xs font-semibold tracking-widest uppercase text-center hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
               {{ 'nav.getStarted' | t }}
             </a>
           }
