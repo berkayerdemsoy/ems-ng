@@ -32,7 +32,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
               class="flex-1 px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
               (keydown.enter)="createCategory()" />
             <button (click)="createCategory()" [disabled]="!newCategoryName.trim() || isCreating()"
-              class="px-6 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 text-white text-xs font-semibold tracking-widest uppercase disabled:opacity-50 hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)] transition-all">
+              class="px-6 py-3 rounded-lg bg-gradient-to-r from-amber-300 to-amber-400 text-white text-xs font-semibold tracking-widest uppercase disabled:opacity-50 hover:shadow-[0_4px_15px_rgba(251,191,36,0.4)] transition-all">
               {{ isCreating() ? '...' : (i18n.locale() === 'tr' ? 'Ekle' : 'Add') }}
             </button>
           </div>
@@ -60,7 +60,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                       class="flex-1 px-4 py-2.5 border border-secondary-container/50 rounded-lg text-base bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container/50 transition-all"
                       (keydown.enter)="saveEdit(cat)" (keydown.escape)="cancelEdit()" />
                     <button (click)="saveEdit(cat)"
-                      class="px-4 py-2 text-xs font-semibold tracking-widest uppercase text-white bg-gradient-to-r from-amber-400 to-amber-500 rounded-lg hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)] transition-all">
+                      class="px-4 py-2 text-xs font-semibold tracking-widest uppercase text-white bg-gradient-to-r from-amber-300 to-amber-400 rounded-lg hover:shadow-[0_4px_15px_rgba(251,191,36,0.4)] transition-all">
                       {{ 'common.save' | t }}
                     </button>
                     <button (click)="cancelEdit()"
