@@ -64,7 +64,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
                   </div>
                 </div>
                 <button (click)="sendVerification()" [disabled]="sendingVerification() || cooldownLeft() > 0"
-                  class="self-start sm:self-auto shrink-0 px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="self-start sm:self-auto shrink-0 px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   @if (sendingVerification()) {
                     {{ 'profile.sendingLink' | t }}
                   } @else if (cooldownLeft() > 0) {
@@ -94,7 +94,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
                 <button (click)="becomeOwner()" [disabled]="!user.verified || becomingOwner()"
                   class="self-start sm:self-auto shrink-0 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase rounded-full transition-all"
                   [class]="user.verified
-                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)]'
+                    ? 'bg-gradient-to-r from-amber-300 to-amber-400 text-white hover:shadow-[0_4px_15px_rgba(251,191,36,0.4)]'
                     : 'bg-surface-container text-on-surface-variant cursor-not-allowed'">
                   {{ becomingOwner() ? ('profile.upgrading' | t) : ('profile.becomeOwnerBtn' | t) }}
                 </button>
@@ -160,7 +160,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
                     {{ 'profile.cancel' | t }}
                   </button>
                   <button type="submit" [disabled]="isSaving()"
-                    class="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
+                    class="flex-1 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(251,191,36,0.2)] hover:shadow-[0_8px_25px_rgba(251,191,36,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
                     @if (isSaving()) {
                       <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                     } @else {
@@ -251,7 +251,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
                     {{ 'profile.cancel' | t }}
                   </button>
                   <button type="submit" [disabled]="isChangingPassword()"
-                    class="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
+                    class="flex-1 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(251,191,36,0.2)] hover:shadow-[0_8px_25px_rgba(251,191,36,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
                     @if (isChangingPassword()) {
                       <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                     } @else {

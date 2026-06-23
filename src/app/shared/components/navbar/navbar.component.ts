@@ -24,20 +24,20 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           <!-- Desktop nav links -->
           <div class="hidden md:flex items-center space-x-8">
             <a routerLink="/events"
-               routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-               class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
+                routerLinkActive="!text-amber-500 border-b border-amber-400/50 pb-1"
+                class="text-neutral-500 hover:text-amber-400 transition-all duration-300">{{ 'nav.discover' | t }}</a>
             <a routerLink="/my-participations"
-               routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-               class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.myTickets' | t }}</a>
+                routerLinkActive="!text-amber-500 border-b border-amber-400/50 pb-1"
+                class="text-neutral-500 hover:text-amber-400 transition-all duration-300">{{ 'nav.myTickets' | t }}</a>
             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
               <a routerLink="/dashboard"
-                 routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-                 class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.dashboard' | t }}</a>
+                 routerLinkActive="!text-amber-500 border-b border-amber-400/50 pb-1"
+                 class="text-neutral-500 hover:text-amber-400 transition-all duration-300">{{ 'nav.dashboard' | t }}</a>
             }
             @if (auth.role() === 'ADMIN') {
               <a routerLink="/admin"
-                 routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-1"
-                 class="text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.admin' | t }}</a>
+                 routerLinkActive="!text-amber-500 border-b border-amber-400/50 pb-1"
+                 class="text-neutral-500 hover:text-amber-400 transition-all duration-300">{{ 'nav.admin' | t }}</a>
             }
           </div>
 
@@ -48,13 +48,13 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               <button (click)="i18n.setLocale('tr')"
                 class="px-2.5 py-1 text-[11px] font-semibold tracking-widest uppercase rounded-full transition-all"
                 [class]="i18n.locale() === 'tr'
-                  ? 'bg-amber-400 text-white shadow-sm'
-                  : 'text-on-surface-variant hover:text-amber-600'">TR</button>
+                  ? 'bg-amber-300 text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-amber-500'">TR</button>
               <button (click)="i18n.setLocale('en')"
                 class="px-2.5 py-1 text-[11px] font-semibold tracking-widest uppercase rounded-full transition-all"
                 [class]="i18n.locale() === 'en'
-                  ? 'bg-amber-400 text-white shadow-sm'
-                  : 'text-on-surface-variant hover:text-amber-600'">EN</button>
+                  ? 'bg-amber-300 text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-amber-500'">EN</button>
             </div>
             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
               <a routerLink="/events/create"
@@ -63,7 +63,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               </a>
             }
             <a routerLink="/profile"
-               class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-white/50 hover:border-amber-400 transition-colors text-sm font-bold text-on-surface-variant">
+               class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-white/50 hover:border-amber-300 transition-colors text-sm font-bold text-on-surface-variant">
               {{ initials() }}
             </a>
             <button (click)="auth.logout()" class="text-on-surface-variant hover:text-error transition-colors">
@@ -84,20 +84,20 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               <button (click)="i18n.setLocale('tr')"
                 class="px-2.5 py-1 text-[11px] font-semibold tracking-widest uppercase rounded-full transition-all"
                 [class]="i18n.locale() === 'tr'
-                  ? 'bg-amber-400 text-white shadow-sm'
-                  : 'text-on-surface-variant hover:text-amber-600'">TR</button>
+                  ? 'bg-amber-300 text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-amber-500'">TR</button>
               <button (click)="i18n.setLocale('en')"
                 class="px-2.5 py-1 text-[11px] font-semibold tracking-widest uppercase rounded-full transition-all"
                 [class]="i18n.locale() === 'en'
-                  ? 'bg-amber-400 text-white shadow-sm'
-                  : 'text-on-surface-variant hover:text-amber-600'">EN</button>
+                  ? 'bg-amber-300 text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-amber-500'">EN</button>
             </div>
             <a routerLink="/events"
-               routerLinkActive="!text-amber-600 border-b border-amber-500/50 pb-2"
-               class="py-2 text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.discover' | t }}</a>
-            <a routerLink="/login" class="py-2 text-neutral-500 hover:text-amber-500 transition-all duration-300">{{ 'nav.signIn' | t }}</a>
+               routerLinkActive="!text-amber-500 border-b border-amber-400/50 pb-2"
+               class="py-2 text-neutral-500 hover:text-amber-400 transition-all duration-300">{{ 'nav.discover' | t }}</a>
+            <a routerLink="/login" class="py-2 text-neutral-500 hover:text-amber-400 transition-all duration-300">{{ 'nav.signIn' | t }}</a>
             <a routerLink="/register"
-               class="px-6 py-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
+               class="px-6 py-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:shadow-[0_0_20px_rgba(254,200,80,0.4)] transition-all duration-300">
               {{ 'nav.getStarted' | t }}
             </a>
           </div>
@@ -108,13 +108,13 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               <button (click)="i18n.setLocale('tr')"
                 class="px-2 py-0.5 text-[11px] font-semibold tracking-widest uppercase rounded-full transition-all"
                 [class]="i18n.locale() === 'tr'
-                  ? 'bg-amber-400 text-white shadow-sm'
-                  : 'text-on-surface-variant hover:text-amber-600'">TR</button>
+                  ? 'bg-amber-300 text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-amber-500'">TR</button>
               <button (click)="i18n.setLocale('en')"
                 class="px-2 py-0.5 text-[11px] font-semibold tracking-widest uppercase rounded-full transition-all"
                 [class]="i18n.locale() === 'en'
-                  ? 'bg-amber-400 text-white shadow-sm'
-                  : 'text-on-surface-variant hover:text-amber-600'">EN</button>
+                  ? 'bg-amber-300 text-white shadow-sm'
+                  : 'text-on-surface-variant hover:text-amber-500'">EN</button>
             </div>
             <button (click)="toggleMenu()" class="flex items-center justify-center w-10 h-10 rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
               <span class="material-symbols-outlined" style="font-size:26px">{{ mobileMenuOpen() ? 'close' : 'menu' }}</span>
@@ -127,44 +127,44 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       @if (mobileMenuOpen()) {
         <div class="md:hidden bg-white/95 backdrop-blur-xl border-t border-white/20 shadow-lg px-4 py-4 flex flex-col gap-1">
           @if (auth.isLoggedIn()) {
-            <a routerLink="/events" (click)="closeMenu()"
-               routerLinkActive="text-amber-600 font-medium"
-               class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-              <span class="material-symbols-outlined" style="font-size:20px">explore</span>
-              {{ 'nav.discover' | t }}
-            </a>
-            <a routerLink="/my-participations" (click)="closeMenu()"
-               routerLinkActive="text-amber-600 font-medium"
-               class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-              <span class="material-symbols-outlined" style="font-size:20px">confirmation_number</span>
-              {{ 'nav.myTickets' | t }}
-            </a>
-            @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
-              <a routerLink="/dashboard" (click)="closeMenu()"
-                 routerLinkActive="text-amber-600 font-medium"
-                 class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-                <span class="material-symbols-outlined" style="font-size:20px">dashboard</span>
-                {{ 'nav.dashboard' | t }}
-              </a>
-            }
-            @if (auth.role() === 'ADMIN') {
-              <a routerLink="/admin" (click)="closeMenu()"
-                 routerLinkActive="text-amber-600 font-medium"
-                 class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-                <span class="material-symbols-outlined" style="font-size:20px">manage_accounts</span>
-                {{ 'nav.admin' | t }}
-              </a>
-            }
-            @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
-              <a routerLink="/events/create" (click)="closeMenu()"
-                 class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-                <span class="material-symbols-outlined" style="font-size:20px">add_circle</span>
-                {{ 'nav.createEvent' | t }}
-              </a>
-            }
-            <div class="border-t border-neutral-100 my-1"></div>
-            <a routerLink="/profile" (click)="closeMenu()"
-               class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
+             <a routerLink="/events" (click)="closeMenu()"
+                routerLinkActive="text-amber-500 font-medium"
+                class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+               <span class="material-symbols-outlined" style="font-size:20px">explore</span>
+               {{ 'nav.discover' | t }}
+             </a>
+             <a routerLink="/my-participations" (click)="closeMenu()"
+                routerLinkActive="text-amber-500 font-medium"
+                class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+               <span class="material-symbols-outlined" style="font-size:20px">confirmation_number</span>
+               {{ 'nav.myTickets' | t }}
+             </a>
+             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
+               <a routerLink="/dashboard" (click)="closeMenu()"
+                  routerLinkActive="text-amber-500 font-medium"
+                  class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+                 <span class="material-symbols-outlined" style="font-size:20px">dashboard</span>
+                 {{ 'nav.dashboard' | t }}
+               </a>
+             }
+             @if (auth.role() === 'ADMIN') {
+               <a routerLink="/admin" (click)="closeMenu()"
+                  routerLinkActive="text-amber-500 font-medium"
+                  class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+                 <span class="material-symbols-outlined" style="font-size:20px">manage_accounts</span>
+                 {{ 'nav.admin' | t }}
+               </a>
+             }
+             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
+               <a routerLink="/events/create" (click)="closeMenu()"
+                  class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+                 <span class="material-symbols-outlined" style="font-size:20px">add_circle</span>
+                 {{ 'nav.createEvent' | t }}
+               </a>
+             }
+             <div class="border-t border-neutral-100 my-1"></div>
+             <a routerLink="/profile" (click)="closeMenu()"
+                class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
               <span class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-xs font-bold text-on-surface-variant border border-white/50">{{ initials() }}</span>
               {{ 'nav.profile' | t }}
             </a>
@@ -174,19 +174,19 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
               {{ 'nav.logout' | t }}
             </button>
           } @else {
-            <a routerLink="/events" (click)="closeMenu()"
-               routerLinkActive="text-amber-600 font-medium"
-               class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-              <span class="material-symbols-outlined" style="font-size:20px">explore</span>
-              {{ 'nav.discover' | t }}
-            </a>
-            <a routerLink="/login" (click)="closeMenu()"
-               class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-3">
-              <span class="material-symbols-outlined" style="font-size:20px">login</span>
-              {{ 'nav.signIn' | t }}
-            </a>
-            <a routerLink="/register" (click)="closeMenu()"
-               class="mx-3 mt-1 px-6 py-3 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-white text-xs font-semibold tracking-widest uppercase text-center hover:shadow-[0_0_20px_rgba(254,170,0,0.4)] transition-all duration-300">
+             <a routerLink="/events" (click)="closeMenu()"
+                routerLinkActive="text-amber-500 font-medium"
+                class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+               <span class="material-symbols-outlined" style="font-size:20px">explore</span>
+               {{ 'nav.discover' | t }}
+             </a>
+             <a routerLink="/login" (click)="closeMenu()"
+                class="px-3 py-3 rounded-lg text-neutral-700 hover:bg-amber-50 hover:text-amber-500 transition-colors flex items-center gap-3">
+               <span class="material-symbols-outlined" style="font-size:20px">login</span>
+               {{ 'nav.signIn' | t }}
+             </a>
+             <a routerLink="/register" (click)="closeMenu()"
+                class="mx-3 mt-1 px-6 py-3 rounded-full bg-gradient-to-r from-amber-300 to-amber-400 text-white text-xs font-semibold tracking-widest uppercase text-center hover:shadow-[0_0_20px_rgba(254,200,80,0.4)] transition-all duration-300">
               {{ 'nav.getStarted' | t }}
             </a>
           }
@@ -195,17 +195,17 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 
       @if (auth.isLoggedIn() && !auth.isVerified() && !verificationSent()) {
         <div class="bg-amber-50/80 backdrop-blur-sm border-t border-amber-200/40 px-4 md:px-8 py-2 flex items-center justify-between gap-4">
-          <p class="text-sm text-amber-800 flex items-center gap-2">
+          <p class="text-sm text-amber-700 flex items-center gap-2">
             <span class="material-symbols-outlined" style="font-size:16px">warning</span>
             {{ 'nav.verifyBanner' | t }}
           </p>
           <div class="flex items-center gap-4 shrink-0">
             <button (click)="sendVerification()" [disabled]="sending()"
-                    class="cursor-pointer text-xs font-semibold text-amber-700 underline hover:text-amber-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="cursor-pointer text-xs font-semibold text-amber-600 underline hover:text-amber-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {{ sending() ? ('nav.sending' | t) : ('nav.sendVerification' | t) }}
             </button>
             <button (click)="dismissBanner()"
-                    class="text-amber-600 hover:text-amber-900 transition-colors"
+                    class="text-amber-500 hover:text-amber-800 transition-colors"
                     [title]="'nav.dismissBanner' | t">
               <span class="material-symbols-outlined" style="font-size:18px">close</span>
             </button>

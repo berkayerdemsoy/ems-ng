@@ -29,7 +29,7 @@ type AdminTab = 'categories' | 'events' | 'users';
     <div class="min-h-screen pt-28 pb-24 px-[max(24px,5vw)] relative">
       <!-- Background blobs -->
       <div class="absolute top-32 right-20 w-96 h-96 bg-secondary-container/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-      <div class="absolute bottom-40 left-10 w-72 h-72 bg-amber-400/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+      <div class="absolute bottom-40 left-10 w-72 h-72 bg-amber-300/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
       <div class="max-w-7xl mx-auto">
 
@@ -46,7 +46,7 @@ type AdminTab = 'categories' | 'events' | 'users';
             <button (click)="activeTab.set(tab.id)"
               class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[11px] font-semibold tracking-widest uppercase transition-all duration-200"
               [class]="activeTab() === tab.id
-                ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.35)]'
+                ? 'bg-gradient-to-r from-amber-300 to-amber-400 text-white shadow-[0_4px_12px_rgba(251,191,36,0.35)]'
                 : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60'">
               <span class="material-symbols-outlined" style="font-size:16px">{{ tab.icon }}</span>
               {{ tab.label | t }}
@@ -73,10 +73,10 @@ type AdminTab = 'categories' | 'events' | 'users';
               <div class="flex gap-3">
                 <input [(ngModel)]="newCategoryName" type="text"
                   [placeholder]="'adminPanel.categoryPlaceholder' | t"
-                  class="flex-1 px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-amber-400/40 transition-all"
+                  class="flex-1 px-4 py-3 bg-surface border border-outline-variant rounded-lg text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-amber-300/40 transition-all"
                   (keydown.enter)="createCategory()" />
                 <button (click)="createCategory()" [disabled]="!newCategoryName.trim() || isCatCreating()"
-                  class="px-6 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 text-white text-xs font-semibold tracking-widest uppercase disabled:opacity-50 hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)] transition-all">
+                  class="px-6 py-3 rounded-lg bg-gradient-to-r from-amber-300 to-amber-400 text-white text-xs font-semibold tracking-widest uppercase disabled:opacity-50 hover:shadow-[0_4px_15px_rgba(251,191,36,0.4)] transition-all">
                   {{ isCatCreating() ? '...' : ('adminPanel.add' | t) }}
                 </button>
               </div>
@@ -101,10 +101,10 @@ type AdminTab = 'categories' | 'events' | 'users';
                     <li class="flex items-center gap-3 px-6 py-4 hover:bg-surface-container/30 transition-colors">
                       @if (editingCatId() === cat.id) {
                         <input [(ngModel)]="editingCatName" type="text"
-                          class="flex-1 px-4 py-2.5 border border-amber-400/50 rounded-lg text-base bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-amber-400/40 transition-all"
+                          class="flex-1 px-4 py-2.5 border border-amber-300/50 rounded-lg text-base bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-amber-300/40 transition-all"
                           (keydown.enter)="saveCatEdit(cat)" (keydown.escape)="cancelCatEdit()" />
                         <button (click)="saveCatEdit(cat)"
-                          class="px-4 py-2 text-xs font-semibold tracking-widest uppercase text-white bg-gradient-to-r from-amber-400 to-amber-500 rounded-lg hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)] transition-all">
+                          class="px-4 py-2 text-xs font-semibold tracking-widest uppercase text-white bg-gradient-to-r from-amber-300 to-amber-400 rounded-lg hover:shadow-[0_4px_15px_rgba(251,191,36,0.4)] transition-all">
                           {{ 'common.save' | t }}
                         </button>
                         <button (click)="cancelCatEdit()"
@@ -112,7 +112,7 @@ type AdminTab = 'categories' | 'events' | 'users';
                           {{ 'common.cancel' | t }}
                         </button>
                       } @else {
-                        <span class="material-symbols-outlined text-amber-400/60 mr-1" style="font-size:18px">label</span>
+                        <span class="material-symbols-outlined text-amber-300/60 mr-1" style="font-size:18px">label</span>
                         <span class="flex-1 text-base font-medium text-on-surface">{{ cat.name }}</span>
                         <button (click)="startCatEdit(cat)"
                           class="p-2 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container transition-all">
@@ -145,7 +145,7 @@ type AdminTab = 'categories' | 'events' | 'users';
                 }
               </div>
               <a routerLink="/events/create"
-                class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 text-white text-[11px] font-semibold tracking-widest uppercase hover:shadow-[0_4px_15px_rgba(245,158,11,0.4)] transition-all">
+                class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-300 to-amber-400 text-white text-[11px] font-semibold tracking-widest uppercase hover:shadow-[0_4px_15px_rgba(251,191,36,0.4)] transition-all">
                 <span class="material-symbols-outlined" style="font-size:16px">add</span>
                 {{ 'adminPanel.createEvent' | t }}
               </a>
@@ -179,7 +179,7 @@ type AdminTab = 'categories' | 'events' | 'users';
                           <!-- Title -->
                           <td class="px-6 py-4">
                             <a [routerLink]="['/events', event.id]"
-                              class="text-base font-medium text-on-surface hover:text-amber-600 transition-colors line-clamp-1 max-w-[200px] block">
+                               class="text-base font-medium text-on-surface hover:text-amber-500 transition-colors line-clamp-1 max-w-[200px] block">
                               {{ event.title }}
                             </a>
                           </td>
@@ -200,7 +200,7 @@ type AdminTab = 'categories' | 'events' | 'users';
                           </td>
                           <!-- Category -->
                           <td class="px-6 py-4">
-                            <span class="inline-block px-2.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-full bg-amber-50 text-amber-700 border border-amber-200/60 whitespace-nowrap" [title]="event.category ? (event.category.name | categoryName) : ''">
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-full bg-amber-50 text-amber-600 border border-amber-200/60 whitespace-nowrap" [title]="event.category ? (event.category.name | categoryName) : ''">
                               {{ event.category ? (event.category.name | categoryName) : '—' }}
                             </span>
                           </td>

@@ -193,7 +193,7 @@ let _uid = 0;
         <button
           type="button" (click)="apply()"
           [disabled]="!pendingDate()"
-          class="w-2/3 py-2.5 rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_14px_rgba(245,158,11,0.22)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.38)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5">
+          class="w-2/3 py-2.5 rounded-lg bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 text-white text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_14px_rgba(251,191,36,0.22)] hover:shadow-[0_6px_22px_rgba(251,191,36,0.38)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined" style="font-size:14px">check</span>
           {{ isTr() ? 'Uygula' : 'Apply' }}
         </button>
@@ -372,7 +372,7 @@ export class DatetimePickerComponent implements ControlValueAccessor {
     if (this.isSelected(day.date))
       return 'bg-secondary-container text-on-secondary-container font-semibold cursor-default';
     if (this.isToday(day.date) && day.inMonth)
-      return 'ring-1 ring-amber-400 text-secondary font-semibold hover:bg-amber-400/10 cursor-pointer';
+      return 'ring-1 ring-amber-300 text-secondary font-semibold hover:bg-amber-300/10 cursor-pointer';
     if (!day.inMonth)
       return 'text-on-surface-variant/25 cursor-default';
     return 'text-on-surface hover:bg-surface-container cursor-pointer';

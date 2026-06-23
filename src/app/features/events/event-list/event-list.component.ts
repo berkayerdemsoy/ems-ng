@@ -32,7 +32,7 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
             </h1>
             @if (auth.role() === 'EVENT_OWNER' || auth.role() === 'ADMIN') {
               <a routerLink="/events/create"
-                 class="sm:mb-2 px-8 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors shrink-0 self-start sm:self-auto">
+                 class="sm:mb-2 px-8 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-300 transition-colors shrink-0 self-start sm:self-auto">
                 {{ 'eventList.newExperience' | t }}
               </a>
             }
@@ -65,7 +65,7 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
                 [label]="'eventList.dateLabel' | t" />
             </div>
             <button (click)="clearFilters()"
-                    class="bg-secondary-container text-on-secondary-container w-full md:w-auto px-8 py-3 rounded-full text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors ml-auto md:ml-2">
+                    class="bg-secondary-container text-on-secondary-container w-full md:w-auto px-8 py-3 rounded-full text-xs font-semibold tracking-widest uppercase hover:bg-amber-300 transition-colors ml-auto md:ml-2">
               @if (hasFilter()) { {{ 'eventList.clearFilter' | t }} } @else { {{ 'eventList.discover' | t }} }
             </button>
           </div>
@@ -113,7 +113,7 @@ import { CitySelectComponent } from '../../../shared/components/city-select/city
           @if (!filteredEvents()!.last) {
             <div class="mt-16 text-center">
               <button (click)="onPageChange(currentPage() + 1)"
-                      class="glass-card border border-amber-500/30 px-8 py-3 rounded-full text-xs font-semibold tracking-widest text-secondary-container uppercase hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
+                      class="glass-card border border-amber-400/30 px-8 py-3 rounded-full text-xs font-semibold tracking-widest text-secondary-container uppercase hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
                 <span class="material-symbols-outlined" style="font-size:18px">expand_more</span>
                 {{ 'eventList.loadMore' | t }}
               </button>

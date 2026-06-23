@@ -95,7 +95,7 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
               <span class="material-symbols-outlined text-on-surface-variant text-5xl block mb-4">event_busy</span>
               <p class="text-lg text-on-surface-variant">{{ 'dashboard.noEvents' | t }}</p>
               <a routerLink="/events/create"
-                 class="inline-block mt-6 px-6 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-400 transition-colors">
+                 class="inline-block mt-6 px-6 py-3 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold tracking-widest uppercase hover:bg-amber-300 transition-colors">
                 {{ 'dashboard.createEventLink' | t }}
               </a>
             </div>

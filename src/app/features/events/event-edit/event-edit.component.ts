@@ -145,7 +145,7 @@ function editDateRangeValidator(group: AbstractControl): ValidationErrors | null
                   {{ 'eventEdit.cancel' | t }}
                 </button>
                 <button type="submit" [disabled]="isSaving()"
-                  class="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] hover:shadow-[0_8px_25px_rgba(245,158,11,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
+                  class="flex-1 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 text-white py-3 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all shadow-[0_4px_20px_rgba(251,191,36,0.2)] hover:shadow-[0_8px_25px_rgba(251,191,36,0.4)] disabled:opacity-60 flex justify-center items-center gap-2">
                   @if (isSaving()) {
                     <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                   } @else {
